@@ -1,0 +1,176 @@
+@page {
+    margin: 18px;
+}
+
+body {
+    color: #111;
+    font-family: DejaVu Sans, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    margin: 0;
+}
+
+.invoice-document {
+    border: 2px solid #111;
+    width: 100%;
+}
+
+.invoice-header {
+    border-bottom: 2px solid #111;
+    padding: 12px;
+}
+
+.invoice-brand {
+    float: left;
+    width: 62%;
+}
+
+.invoice-brand img {
+    float: left;
+    height: 48px;
+    margin-right: 10px;
+    width: 70px;
+}
+
+.invoice-brand h2,
+.invoice-brand p,
+.invoice-header h1 {
+    margin: 0;
+}
+
+.invoice-header h1 {
+    border: 2px solid #111;
+    float: right;
+    font-size: 20px;
+    padding: 8px 12px;
+    text-align: center;
+    width: 150px;
+}
+
+.invoice-header::after,
+.invoice-party-grid::after,
+.invoice-meta::after,
+.invoice-bottom-grid::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+
+.invoice-party-grid > div {
+    border-bottom: 2px solid #111;
+    float: left;
+    min-height: 150px;
+    padding: 10px;
+    width: 50%;
+}
+
+.invoice-party-grid > div:first-child {
+    border-right: 2px solid #111;
+}
+
+.invoice-party-grid h3,
+.invoice-party-grid p {
+    margin: 0 0 4px;
+}
+
+.invoice-meta div {
+    border-bottom: 2px solid #111;
+    float: left;
+    padding: 9px 10px;
+    width: 50%;
+}
+
+.invoice-meta div:first-child {
+    border-right: 2px solid #111;
+}
+
+.invoice-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.invoice-table th,
+.invoice-table td {
+    border-bottom: 2px solid #111;
+    border-right: 2px solid #111;
+    padding: 8px;
+    vertical-align: top;
+}
+
+.invoice-table th:last-child,
+.invoice-table td:last-child {
+    border-right: 0;
+}
+
+.invoice-table th {
+    background: #f2f2f2;
+    font-size: 11px;
+    text-align: center;
+}
+
+.amount-words {
+    border-right: 2px solid #111;
+    float: left;
+    min-height: 220px;
+    padding: 10px;
+    width: 64%;
+}
+
+.amount-words h3,
+.amount-words p {
+    margin: 0 0 5px;
+}
+
+.invoice-totals {
+    float: left;
+    width: 36%;
+}
+
+.invoice-totals div {
+    border-bottom: 2px solid #111;
+    padding: 8px 10px;
+}
+
+.invoice-totals span {
+    display: inline-block;
+    width: 58%;
+}
+
+.invoice-totals strong {
+    display: inline-block;
+    text-align: right;
+    width: 40%;
+}
+
+.signature-block {
+    margin-left: auto;
+    min-height: 125px;
+    padding: 12px;
+    text-align: center;
+    width: 330px;
+}
+
+.signature-block p {
+    font-weight: 700;
+    margin: 0 0 8px;
+}
+
+.signature-block img {
+    height: 60px;
+    object-fit: contain;
+    width: 170px;
+}
+
+.signature-block strong {
+    border-top: 1px solid #111;
+    display: block;
+    margin-top: 4px;
+    padding-top: 5px;
+}
+
+.invoice-footer {
+    background: #f2f2f2;
+    border-top: 2px solid #111;
+    font-weight: 700;
+    padding: 9px;
+    text-align: center;
+}

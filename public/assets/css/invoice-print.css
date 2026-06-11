@@ -1,0 +1,36 @@
+.print-page {
+    padding: 24px;
+}
+
+.print-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin: 0 auto 18px;
+    max-width: 900px;
+}
+
+@media print {
+    body {
+        background: #fff;
+        margin: 0;
+    }
+
+    .print-actions,
+    .topbar,
+    .sidebar,
+    .action-group,
+    .btn {
+        display: none;
+    }
+
+    .print-page {
+        padding: 0;
+    }
+
+    .invoice-document {
+        border: 2px solid #111;
+        max-width: none;
+        width: 100%;
+    }
+}

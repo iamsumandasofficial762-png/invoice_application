@@ -1,0 +1,175 @@
+.invoice-document {
+    background: #fff;
+    border: 2px solid #111;
+    color: #111;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0 auto;
+    max-width: 900px;
+}
+
+.invoice-header {
+    align-items: center;
+    border-bottom: 2px solid #111;
+    display: flex;
+    justify-content: space-between;
+    padding: 14px;
+}
+
+.invoice-brand {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+}
+
+.invoice-brand img {
+    height: 56px;
+    object-fit: contain;
+    width: 76px;
+}
+
+.invoice-brand h2,
+.invoice-brand p,
+.invoice-header h1 {
+    margin: 0;
+}
+
+.invoice-header h1 {
+    border: 2px solid #111;
+    font-size: 22px;
+    padding: 8px 14px;
+}
+
+.invoice-party-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.invoice-party-grid > div {
+    border-bottom: 2px solid #111;
+    padding: 12px;
+}
+
+.invoice-party-grid > div:first-child {
+    border-right: 2px solid #111;
+}
+
+.invoice-party-grid h3,
+.invoice-party-grid p {
+    margin: 0 0 5px;
+}
+
+.invoice-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.invoice-meta div {
+    border-bottom: 2px solid #111;
+    padding: 10px 12px;
+}
+
+.invoice-meta div:first-child {
+    border-right: 2px solid #111;
+}
+
+.invoice-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.invoice-table th,
+.invoice-table td {
+    border-bottom: 2px solid #111;
+    border-right: 2px solid #111;
+    padding: 10px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.invoice-table th:last-child,
+.invoice-table td:last-child {
+    border-right: 0;
+}
+
+.invoice-table th {
+    background: #f2f2f2;
+    font-size: 12px;
+    text-align: center;
+}
+
+.invoice-bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+}
+
+.amount-words {
+    border-right: 2px solid #111;
+    padding: 12px;
+}
+
+.amount-words h3,
+.amount-words p {
+    margin: 0 0 6px;
+}
+
+.invoice-totals div {
+    border-bottom: 2px solid #111;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 12px;
+}
+
+.signature-block {
+    margin-left: auto;
+    min-height: 140px;
+    padding: 14px;
+    text-align: center;
+    width: 360px;
+}
+
+.signature-block p {
+    font-weight: 700;
+    margin: 0 0 8px;
+}
+
+.signature-block img {
+    height: 70px;
+    object-fit: contain;
+    width: 180px;
+}
+
+.signature-block strong {
+    border-top: 1px solid #111;
+    display: block;
+    margin-top: 4px;
+    padding-top: 6px;
+}
+
+.invoice-footer {
+    background: #f2f2f2;
+    border-top: 2px solid #111;
+    font-weight: 700;
+    padding: 10px;
+    text-align: center;
+}
+
+@media (max-width: 760px) {
+    .invoice-header,
+    .invoice-party-grid,
+    .invoice-meta,
+    .invoice-bottom-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .invoice-header {
+        align-items: stretch;
+        display: grid;
+        gap: 12px;
+    }
+
+    .invoice-party-grid > div:first-child,
+    .amount-words,
+    .invoice-meta div:first-child {
+        border-right: 0;
+    }
+}
