@@ -7,6 +7,124 @@
     max-width: 900px;
 }
 
+.invoice-status-panel {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #d9dee7;
+    border-radius: 8px;
+    box-shadow: 0 10px 24px rgba(16, 34, 53, .08);
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    margin: 0 auto 18px;
+    max-width: 900px;
+    padding: 14px 16px;
+}
+
+.invoice-status-label {
+    color: #667085;
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.invoice-status-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.status-action-button {
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+    padding: 11px 18px;
+}
+
+.status-action-paid {
+    background: #16a34a;
+    color: #fff;
+}
+
+.status-action-unpaid {
+    background: #dc2626;
+    color: #fff;
+}
+
+.status-confirm-modal {
+    align-items: center;
+    backdrop-filter: blur(5px);
+    background: rgba(16, 34, 53, .5);
+    display: none;
+    inset: 0;
+    justify-content: center;
+    padding: 20px;
+    position: fixed;
+    z-index: 50;
+}
+
+.status-confirm-modal.is-open {
+    display: flex;
+}
+
+.status-confirm-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 24px 70px rgba(16, 34, 53, .28);
+    max-width: 440px;
+    padding: 24px;
+    width: 100%;
+}
+
+.status-confirm-card h2 {
+    margin: 0 0 8px;
+}
+
+.status-confirm-card p {
+    color: #344054;
+    margin: 0;
+}
+
+.status-confirm-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 22px;
+}
+
+.invoice-image-header,
+.invoice-image-footer {
+    line-height: 0;
+    width: 100%;
+}
+
+.invoice-image-header {
+    border-bottom: 2px solid #111;
+}
+
+.invoice-image-footer {
+    border-top: 2px solid #111;
+}
+
+.invoice-image-header img,
+.invoice-image-footer img {
+    display: block;
+    height: auto;
+    width: 100%;
+}
+
+.invoice-print-title {
+    background: #fff;
+    border-bottom: 2px solid #111;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    padding: 10px;
+    text-align: center;
+}
+
 .invoice-header {
     align-items: center;
     border-bottom: 2px solid #111;
@@ -97,52 +215,99 @@
     text-align: center;
 }
 
-.invoice-bottom-grid {
-    display: grid;
-    grid-template-columns: 1fr 320px;
+.invoice-lower-grid {
+    border-bottom: 2px solid #111;
 }
 
-.amount-words {
+.invoice-total-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.invoice-total-table td {
+    border-bottom: 2px solid #111;
     border-right: 2px solid #111;
-    padding: 12px;
+    padding: 3px 8px;
 }
 
-.amount-words h3,
-.amount-words p {
+.invoice-total-table td:first-child {
+    width: 64%;
+}
+
+.invoice-total-table td:last-child {
+    font-weight: 700;
+    text-align: right;
+    width: 36%;
+}
+
+.invoice-total-table td:last-child,
+.invoice-amount-word-row strong:last-child,
+.invoice-payment-row span,
+.signature-block {
+    border-right: 0;
+}
+
+.invoice-amount-word-row,
+.invoice-payment-row {
+    display: grid;
+    grid-template-columns: 34% 66%;
+}
+
+.invoice-amount-word-row > *,
+.invoice-payment-row > * {
+    border-bottom: 2px solid #111;
+    border-right: 2px solid #111;
+    padding: 8px;
+}
+
+.invoice-bank-signature-grid {
+    display: grid;
+    grid-template-columns: 34% 66%;
+    min-height: 190px;
+}
+
+.bank-details-block {
+    border-right: 2px solid #111;
+    padding: 8px;
+}
+
+.bank-details-block h3,
+.bank-details-block p {
     margin: 0 0 6px;
 }
 
-.invoice-totals div {
-    border-bottom: 2px solid #111;
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 12px;
-}
-
 .signature-block {
-    margin-left: auto;
-    min-height: 140px;
-    padding: 14px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 190px;
     text-align: center;
-    width: 360px;
 }
 
-.signature-block p {
-    font-weight: 700;
-    margin: 0 0 8px;
+.for-row {
+    border-bottom: 2px solid #111;
+    display: grid;
+    grid-template-columns: 18% 82%;
+}
+
+.for-row strong {
+    border-right: 2px solid #111;
+    padding: 6px 8px;
+}
+
+.for-row strong:last-child {
+    border-right: 0;
 }
 
 .signature-block img {
-    height: 70px;
+    align-self: center;
+    justify-self: center;
+    max-height: 110px;
+    max-width: 360px;
     object-fit: contain;
-    width: 180px;
 }
 
-.signature-block strong {
-    border-top: 1px solid #111;
-    display: block;
-    margin-top: 4px;
-    padding-top: 6px;
+.authorized-signature-label {
+    padding: 8px;
 }
 
 .invoice-footer {
@@ -154,22 +319,17 @@
 }
 
 @media (max-width: 760px) {
-    .invoice-header,
     .invoice-party-grid,
     .invoice-meta,
-    .invoice-bottom-grid {
+    .invoice-amount-word-row,
+    .invoice-payment-row,
+    .invoice-bank-signature-grid {
         grid-template-columns: 1fr;
     }
 
-    .invoice-header {
-        align-items: stretch;
-        display: grid;
-        gap: 12px;
-    }
-
     .invoice-party-grid > div:first-child,
-    .amount-words,
-    .invoice-meta div:first-child {
+    .invoice-meta div:first-child,
+    .bank-details-block {
         border-right: 0;
     }
 }

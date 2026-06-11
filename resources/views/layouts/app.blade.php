@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Invoice Application' }}</title>
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/favicon-790x510.png') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/fontawesome/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/customer.css') }}">
     @stack('styles')
 </head>
 <body>
@@ -18,6 +21,7 @@
         </main>
     </div>
     <script src="{{ asset('assets/js/app.js') }}"></script>
+    <script src="{{ asset('assets/js/flash-message.js') }}"></script>
     @stack('scripts')
 </body>
 </html>

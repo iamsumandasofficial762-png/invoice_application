@@ -1,18 +1,18 @@
 @php
     $assetSource = fn (string $path) => ($pdfMode ?? false) ? public_path($path) : asset($path);
+    $invoiceHeaderPath = file_exists(public_path('assets/images/invoice-header.png'))
+        ? 'assets/images/invoice-header.png'
+        : 'assets/images/invoice/invoice-header.png';
+    $invoiceFooterPath = file_exists(public_path('assets/images/invoice-footer.png'))
+        ? 'assets/images/invoice-footer.png'
+        : 'assets/images/invoice/invoice-footer.png';
 @endphp
 
 <article class="invoice-document">
-    <header class="invoice-header">
-        <div class="invoice-brand">
-            <img src="{{ $assetSource('assets/images/logo.png') }}" alt="Ebluesoft logo">
-            <div>
-                <h2>EBLUESOFT INFOTECT SOLUTIONS PRIVATE LIMITED</h2>
-                <p>Smart Digital Business Solutions</p>
-            </div>
-        </div>
-        <h1>TAX INVOICE</h1>
+    <header class="invoice-image-header">
+        <img src="{{ $assetSource($invoiceHeaderPath) }}" alt="Invoice header">
     </header>
+    <div class="invoice-print-title">TAX INVOICE</div>
 
     <section class="invoice-party-grid">
         <div>
@@ -64,36 +64,68 @@
         </tbody>
     </table>
 
-    <section class="invoice-bottom-grid">
-        <div class="amount-words">
-            <h3>Amount In Word</h3>
-            <p>{{ $invoice->amount_in_words }}</p>
-            <h3>Payment Method:</h3>
-            <p>Cash / Cheque / NEFT/RTGS/IMPS</p>
-            <h3>Bank Details:</h3>
-            <p>Bank: AXIS BANK</p>
-            <p>Payee: EBLUESOFT INFOTECT SOLUTIONS PRIVATE LIMITED</p>
-            <p>A/C No. 925020019932587</p>
-            <p>IFSC Code: UTIB0001656</p>
-            <p>Branch: New Barrackpur Branch</p>
+    <section class="invoice-lower-grid">
+        <table class="invoice-total-table">
+            <tbody>
+                <tr>
+                    <td>Total:-</td>
+                    <td>{{ number_format((float) $invoice->subtotal, 2) }}</td>
+                </tr>
+                <tr>
+                    <td>Add CGST @9 %</td>
+                    <td>{{ number_format((float) $invoice->cgst, 2) }}</td>
+                </tr>
+                <tr>
+                    <td>Add SGST @ 9 %</td>
+                    <td>{{ number_format((float) $invoice->sgst, 2) }}</td>
+                </tr>
+                <tr>
+                    <td>Total Tax:- @ 18 %</td>
+                    <td>{{ number_format((float) $invoice->total_tax, 2) }}</td>
+                </tr>
+                <tr>
+                    <td>Gross Amount:-</td>
+                    <td>{{ number_format((float) $invoice->gross_amount, 2) }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Net Payble Amt.</strong></td>
+                    <td><strong>{{ number_format((float) $invoice->net_payable_amount, 2) }}</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="invoice-amount-word-row">
+            <strong>Amount In Word:-</strong>
+            <strong>{{ $invoice->amount_in_words }}</strong>
         </div>
-        <div class="invoice-totals">
-            <div><span>Total</span><strong>{{ number_format((float) $invoice->subtotal, 2) }}</strong></div>
-            <div><span>Add CGST @9 %</span><strong>{{ number_format((float) $invoice->cgst, 2) }}</strong></div>
-            <div><span>Add SGST @ 9 %</span><strong>{{ number_format((float) $invoice->sgst, 2) }}</strong></div>
-            <div><span>Total Tax:- @ 18 %</span><strong>{{ number_format((float) $invoice->total_tax, 2) }}</strong></div>
-            <div><span>Gross Amount:-</span><strong>{{ number_format((float) $invoice->gross_amount, 2) }}</strong></div>
-            <div><span>Net Payble Amt.</span><strong>{{ number_format((float) $invoice->net_payable_amount, 2) }}</strong></div>
+
+        <div class="invoice-payment-row">
+            <strong>Payment Method:</strong>
+            <span>E. &amp; O.E.</span>
+        </div>
+
+        <div class="invoice-bank-signature-grid">
+            <div class="bank-details-block">
+                <p>Cash / Cheque / NEFT/RTGS/IMPS</p>
+                <h3>Bank Details:-</h3>
+                <p>Bank: AXIS BANK</p>
+                <p>Payee: EBLUESOFT INFOTECT SOLUTIONS PRIVATE LIMITED</p>
+                <p>A/C No. 925020019932587</p>
+                <p>IFSC Code: UTIB0001656</p>
+                <p>Branch: New Barrackpur Branch</p>
+            </div>
+            <div class="signature-block">
+                <div class="for-row">
+                    <strong>For:</strong>
+                    <strong>EBLUESOFT INFOTECT SOLUTIONS PRIVATE LIMITED</strong>
+                </div>
+                <img src="{{ $assetSource('assets/images/signatures/'.$invoice->signature_image) }}" alt="Authorized signature">
+                <strong class="authorized-signature-label">Authorized Signature</strong>
+            </div>
         </div>
     </section>
 
-    <section class="signature-block">
-        <p>For: EBLUESOFT INFOTECT SOLUTIONS PRIVATE LIMITED</p>
-        <img src="{{ $assetSource('assets/images/signatures/'.$invoice->signature_image) }}" alt="Authorized signature">
-        <strong>Authorized Signature</strong>
-    </section>
-
-    <footer class="invoice-footer">
-        <span>www.ebluesoft.com</span>
+    <footer class="invoice-image-footer">
+        <img src="{{ $assetSource($invoiceFooterPath) }}" alt="Invoice footer">
     </footer>
 </article>

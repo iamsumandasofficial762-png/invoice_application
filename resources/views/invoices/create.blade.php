@@ -1,4 +1,8 @@
 <x-layouts.app title="Create Invoice">
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('assets/css/invoice-form.css') }}">
+    @endpush
+
     @php
         $items = old('items', [['description' => '', 'sac_code' => '', 'unit_price' => '']]);
     @endphp
@@ -10,7 +14,7 @@
         </div>
     </section>
 
-    <form class="form-card invoice-form" method="POST" action="{{ route('invoices.store') }}">
+    <form class="invoice-form" method="POST" action="{{ route('invoices.store') }}">
         @csrf
         @include('invoices.partials.form', [
             'invoice' => null,
@@ -19,10 +23,7 @@
             'signatures' => $signatures,
             'items' => $items,
         ])
-        <div class="form-actions">
-            <a class="btn btn-light" href="{{ route('invoices.index') }}">Cancel</a>
-            <button class="btn btn-primary" type="submit">Save Invoice</button>
-        </div>
+        @include('invoices.partials.form-actions', ['mode' => 'create', 'invoice' => null])
     </form>
 
     @include('invoices.partials.customer-modal')

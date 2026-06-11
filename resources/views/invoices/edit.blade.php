@@ -1,4 +1,8 @@
 <x-layouts.app title="Edit Invoice">
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('assets/css/invoice-form.css') }}">
+    @endpush
+
     @php
         $items = old('items', $invoice->items->map(fn ($item) => [
             'description' => $item->description,
@@ -14,7 +18,7 @@
         </div>
     </section>
 
-    <form class="form-card invoice-form" method="POST" action="{{ route('invoices.update', $invoice) }}">
+    <form class="invoice-form" method="POST" action="{{ route('invoices.update', $invoice) }}">
         @csrf
         @method('PUT')
         @include('invoices.partials.form', [
@@ -24,10 +28,7 @@
             'signatures' => $signatures,
             'items' => $items,
         ])
-        <div class="form-actions">
-            <a class="btn btn-light" href="{{ route('invoices.show', $invoice) }}">Cancel</a>
-            <button class="btn btn-primary" type="submit">Update Invoice</button>
-        </div>
+        @include('invoices.partials.form-actions', ['mode' => 'edit', 'invoice' => $invoice])
     </form>
 
     @include('invoices.partials.customer-modal')

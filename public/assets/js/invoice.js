@@ -5,10 +5,79 @@
     const rowTemplate = document.getElementById('item-row-template');
     const addItemButton = document.querySelector('[data-add-item]');
     const ajaxCustomerForm = document.getElementById('ajax-customer-form');
+    const signatureSelect = document.getElementById('signature_image');
+    const signaturePreview = document.getElementById('signaturePreview');
+    const signaturePlaceholder = document.getElementById('signaturePlaceholder');
+    const amountWordsPreview = document.querySelector('[data-amount-words-preview]');
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
     function money(value) {
         return Number(value || 0).toFixed(2);
+    }
+
+    function wordsUnderHundred(number) {
+        const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+        const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+        if (number < 20) {
+            return ones[number];
+        }
+
+        return (tens[Math.floor(number / 10)] + ' ' + ones[number % 10]).trim();
+    }
+
+    function numberToIndianWords(number) {
+        number = Math.round(Number(number || 0));
+
+        if (number === 0) {
+            return 'Rupees Zero Only';
+        }
+
+        const parts = [];
+        const groups = [
+            [10000000, 'Crore'],
+            [100000, 'Lakh'],
+            [1000, 'Thousand'],
+            [100, 'Hundred'],
+        ];
+
+        groups.forEach(function (group) {
+            const value = group[0];
+            const label = group[1];
+
+            if (number >= value) {
+                parts.push(numberToIndianWords(Math.floor(number / value)).replace('Rupees ', '').replace(' Only', '') + ' ' + label);
+                number = number % value;
+            }
+        });
+
+        if (number > 0) {
+            parts.push(wordsUnderHundred(number));
+        }
+
+        return 'Rupees ' + parts.join(' ').trim() + ' Only';
+    }
+
+    function refreshSignaturePreview() {
+        if (!signatureSelect || !signaturePreview) {
+            return;
+        }
+
+        const selected = signatureSelect.options[signatureSelect.selectedIndex];
+        const frame = signaturePreview.closest('.signature-image-frame');
+        const src = selected?.dataset.signatureSrc || '';
+
+        if (!src) {
+            signaturePreview.removeAttribute('src');
+            frame?.classList.remove('has-signature');
+            if (signaturePlaceholder) {
+                signaturePlaceholder.textContent = 'Select signature';
+            }
+            return;
+        }
+
+        signaturePreview.src = src;
+        frame?.classList.add('has-signature');
     }
 
     function refreshCustomerDetails() {
@@ -82,6 +151,10 @@
                 element.textContent = money(values[selector]);
             }
         });
+
+        if (amountWordsPreview) {
+            amountWordsPreview.textContent = numberToIndianWords(gross);
+        }
     }
 
     function addItemRow() {
@@ -117,6 +190,7 @@
     }
 
     customerSelect?.addEventListener('change', refreshCustomerDetails);
+    signatureSelect?.addEventListener('change', refreshSignaturePreview);
     addItemButton?.addEventListener('click', addItemRow);
 
     itemsBody?.addEventListener('input', function (event) {
@@ -186,6 +260,7 @@
     });
 
     refreshCustomerDetails();
+    refreshSignaturePreview();
     refreshRows();
     recalculate();
 })();

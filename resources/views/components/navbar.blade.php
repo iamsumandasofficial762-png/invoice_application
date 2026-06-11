@@ -1,6 +1,6 @@
 <header class="topbar">
     <a class="brand" href="{{ route('dashboard') }}">
-        <span class="brand-mark">EBS</span>
+        <img class="brand-logo" src="{{ asset('assets/images/logo.png') }}" alt="Ebluesoft logo">
         <span>Invoice Manager</span>
     </a>
 </header>

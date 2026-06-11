@@ -13,7 +13,7 @@
             <a class="btn btn-light" href="{{ route('invoices.show', $invoice) }}">Back</a>
             <button class="btn btn-primary" type="button" data-print-button>Print Invoice</button>
         </div>
-        @include('invoices.partials.invoice-document', ['invoice' => $invoice])
+        @include('invoices.partials.invoice-document', ['invoice' => $invoice, 'printMode' => true])
     </main>
     <script src="{{ asset('assets/js/invoice-print.js') }}"></script>
 </body>

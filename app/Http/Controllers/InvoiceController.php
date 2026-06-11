@@ -17,8 +17,8 @@ use Illuminate\View\View;
 class InvoiceController extends Controller
 {
     private array $signatures = [
-        'signature-1.png' => 'Signature 1',
-        'signature-2.png' => 'Signature 2',
+        'signature-1.png' => 'Victor bhattacharjee',
+        'signature-2.png' => 'Subhajit sen',
     ];
 
     public function __construct(
@@ -74,11 +74,15 @@ class InvoiceController extends Controller
                 'gross_amount' => $calculation['gross_amount'],
                 'net_payable_amount' => $calculation['net_payable_amount'],
                 'amount_in_words' => $this->numberToWordsService->rupees($calculation['net_payable_amount']),
-                'signature_image' => $validated['signature_image'],
+                'signature_image' => $validated['signature_image'] ?? 'signature-1.png',
             ]);
 
             $invoice->items()->createMany($calculation['items']);
         });
+
+        if ($request->input('action') === 'save_print') {
+            return redirect()->route('invoices.print', $invoice)->with('success', 'Invoice created successfully.');
+        }
 
         return redirect()->route('invoices.show', $invoice)->with('success', 'Invoice created successfully.');
     }
@@ -148,6 +152,57 @@ class InvoiceController extends Controller
         $invoice->load(['customer', 'items']);
 
         return view('invoices.print', compact('invoice'));
+    }
+
+    public function updateStatus(Request $request, Invoice $invoice): RedirectResponse
+    {
+        $validated = $request->validate([
+            'payment_status' => ['required', Rule::in(['paid', 'unpaid'])],
+        ]);
+
+        $invoice->update([
+            'payment_status' => $validated['payment_status'],
+        ]);
+
+        return redirect()
+            ->route('invoices.show', $invoice)
+            ->with('success', 'Invoice status updated successfully.');
+    }
+
+    public function liveSearch(Request $request)
+    {
+        $search = trim($request->string('search')->toString());
+
+        $invoices = Invoice::with('customer')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where('invoice_number', 'like', "%{$search}%")
+                    ->orWhereDate('invoice_date', $search)
+                    ->orWhere('payment_status', 'like', "%{$search}%")
+                    ->orWhereHas('customer', function ($query) use ($search) {
+                        $query->where('name', 'like', "%{$search}%")
+                            ->orWhere('gst', 'like', "%{$search}%");
+                    });
+            })
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'invoices' => $invoices->map(fn (Invoice $invoice) => [
+                'id' => $invoice->id,
+                'invoice_number' => $invoice->invoice_number,
+                'invoice_date' => $invoice->invoice_date->format('d-m-Y'),
+                'customer_name' => $invoice->customer->name,
+                'customer_gst' => $invoice->customer->gst,
+                'net_payable_amount' => number_format((float) $invoice->net_payable_amount, 2),
+                'payment_status' => $invoice->payment_status ?? 'unpaid',
+                'show_url' => route('invoices.show', $invoice),
+                'edit_url' => route('invoices.edit', $invoice),
+                'pdf_url' => route('invoices.pdf', $invoice),
+                'print_url' => route('invoices.print', $invoice),
+                'delete_url' => route('invoices.destroy', $invoice),
+            ])->values(),
+            'count' => $invoices->count(),
+        ]);
     }
 
     private function validatedData(Request $request): array

@@ -1,16 +1,16 @@
 <div class="form-grid">
     <label>
-        <span>Name</span>
+        <span class="required-label">Name</span>
         <input type="text" name="name" value="{{ old('name', $customer?->name) }}" required>
         <x-form-error name="name" />
     </label>
     <label>
-        <span>State</span>
+        <span class="required-label">State</span>
         <input type="text" name="state" value="{{ old('state', $customer?->state) }}" required>
         <x-form-error name="state" />
     </label>
     <label>
-        <span>PIN</span>
+        <span class="required-label">PIN</span>
         <input type="text" name="pin" value="{{ old('pin', $customer?->pin) }}" required>
         <x-form-error name="pin" />
     </label>
@@ -25,12 +25,12 @@
         <x-form-error name="gmail" />
     </label>
     <label>
-        <span>GST</span>
+        <span class="required-label">GST</span>
         <input type="text" name="gst" value="{{ old('gst', $customer?->gst) }}" required>
         <x-form-error name="gst" />
     </label>
     <label class="span-2">
-        <span>Address</span>
+        <span class="required-label">Address</span>
         <textarea name="address" rows="4" required>{{ old('address', $customer?->address) }}</textarea>
         <x-form-error name="address" />
     </label>

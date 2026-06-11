@@ -76,6 +76,39 @@ class CustomerController extends Controller
         ], 201);
     }
 
+    public function liveSearch(Request $request): JsonResponse
+    {
+        $search = trim($request->string('search')->toString());
+
+        $customers = Customer::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('gst', 'like', "%{$search}%")
+                        ->orWhere('state', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%")
+                        ->orWhere('gmail', 'like', "%{$search}%");
+                });
+            })
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'customers' => $customers->map(fn (Customer $customer) => [
+                'id' => $customer->id,
+                'name' => $customer->name,
+                'gst' => $customer->gst,
+                'state' => $customer->state,
+                'phone' => $customer->phone,
+                'gmail' => $customer->gmail,
+                'show_url' => route('customers.show', $customer),
+                'edit_url' => route('customers.edit', $customer),
+                'delete_url' => route('customers.destroy', $customer),
+            ])->values(),
+            'count' => $customers->count(),
+        ]);
+    }
+
     private function validatedData(Request $request): array
     {
         return $request->validate([

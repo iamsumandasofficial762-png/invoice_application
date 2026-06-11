@@ -43,6 +43,12 @@ a {
     gap: 12px;
 }
 
+.brand-logo {
+    height: 38px;
+    object-fit: contain;
+    width: auto;
+}
+
 .brand-mark {
     background: var(--primary);
     border-radius: 6px;
@@ -175,6 +181,11 @@ label span {
     margin-bottom: 6px;
 }
 
+.required-label::after {
+    color: var(--danger);
+    content: " *";
+}
+
 .form-card {
     background: var(--panel);
     border: 1px solid var(--line);
@@ -206,10 +217,15 @@ label span {
 }
 
 .alert {
+    align-items: center;
     border-radius: 6px;
+    display: flex;
     font-weight: 700;
+    justify-content: space-between;
+    gap: 14px;
     margin-bottom: 18px;
     padding: 12px 14px;
+    transition: opacity .35s ease, transform .35s ease;
 }
 
 .alert-success {
@@ -220,6 +236,28 @@ label span {
 .alert-error {
     background: #fee4e2;
     color: var(--danger);
+}
+
+.alert.is-hiding {
+    animation: flashFadeOut .35s ease forwards;
+}
+
+.alert-close {
+    background: transparent;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+    line-height: 1;
+    padding: 4px;
+}
+
+@keyframes flashFadeOut {
+    to {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
 }
 
 .table-wrap {
@@ -258,6 +296,25 @@ label span {
     border-radius: 8px;
     color: var(--muted);
     padding: 20px;
+}
+
+.status-badge {
+    border-radius: 999px;
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 6px 12px;
+    text-transform: uppercase;
+}
+
+.status-paid {
+    background: #dcfae6;
+    color: #067647;
+}
+
+.status-unpaid {
+    background: #fee4e2;
+    color: #b42318;
 }
 
 .detail-grid,
