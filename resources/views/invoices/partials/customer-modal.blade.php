@@ -10,7 +10,7 @@
                 <label><span class="required-label">State</span><input type="text" name="state" required></label>
                 <label><span class="required-label">PIN</span><input type="text" name="pin" required></label>
                 <label><span>Phone</span><input type="text" name="phone"></label>
-                <label><span>Gmail</span><input type="email" name="gmail"></label>
+                <label><span>Email</span><input type="email" name="gmail"></label>
                 <label><span class="required-label">GST</span><input type="text" name="gst" required></label>
                 <label class="span-2"><span class="required-label">Address</span><textarea name="address" rows="3" required></textarea></label>
             </div>

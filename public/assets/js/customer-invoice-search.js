@@ -46,14 +46,20 @@
         const name = document.createElement('strong');
         name.textContent = customer.name || '-';
 
-        preview.append(
+        const lines = [
             name,
             createLine(customer.address),
             createLine((customer.state || '-') + ' - ' + (customer.pin || '-')),
             createLine('Phone: ' + (customer.phone || '-')),
-            createLine('Gmail: ' + (customer.gmail || '-')),
-            createLine('GSTIN: ' + (customer.gst || '-')),
-        );
+        ];
+
+        if (customer.gmail) {
+            lines.push(createLine('Email: ' + customer.gmail));
+        }
+
+        lines.push(createLine('GSTIN: ' + (customer.gst || '-')));
+
+        preview.append(...lines);
     }
 
     function selectCustomer(customer) {

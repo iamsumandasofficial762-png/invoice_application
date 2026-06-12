@@ -200,6 +200,10 @@ class CustomerController extends Controller
             'phone' => ['nullable', 'string', 'max:30'],
             'gmail' => ['nullable', 'email', 'max:191'],
             'gst' => ['required', 'string', 'max:191'],
+        ], [
+            'gmail.email' => 'Please enter a valid email address.',
+        ], [
+            'gmail' => 'email',
         ]);
     }
 }

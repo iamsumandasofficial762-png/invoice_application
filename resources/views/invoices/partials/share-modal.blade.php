@@ -15,7 +15,7 @@
             </button>
             <button class="invoice-share-option invoice-share-gmail" type="button" data-share-gmail>
                 <span>G</span>
-                <strong>Gmail</strong>
+                <strong>Email</strong>
             </button>
             <button class="invoice-share-option invoice-share-telegram" type="button" data-share-telegram>
                 <span>T</span>

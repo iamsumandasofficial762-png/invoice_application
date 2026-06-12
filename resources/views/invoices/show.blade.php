@@ -6,7 +6,7 @@
 
     @push('scripts')
         <script src="{{ asset('assets/js/invoice-status.js') }}"></script>
-        <script src="{{ asset('assets/js/invoice-share.js') }}"></script>
+        <script src="{{ asset('assets/js/invoice-share.js') }}?v={{ filemtime(public_path('assets/js/invoice-share.js')) }}"></script>
     @endpush
 
     <section class="page-header">

@@ -49,13 +49,15 @@
             </div>
 
             <div class="customer-profile-column">
-                <div class="customer-info-item">
-                    <span class="customer-info-icon"><i class="fas fa-envelope"></i></span>
-                    <div>
-                        <span>Gmail</span>
-                        <strong>{{ $customer->gmail ?? '-' }}</strong>
+                @if (!empty($customer->gmail))
+                    <div class="customer-info-item">
+                        <span class="customer-info-icon"><i class="fas fa-envelope"></i></span>
+                        <div>
+                            <span>Email</span>
+                            <strong>{{ $customer->gmail }}</strong>
+                        </div>
                     </div>
-                </div>
+                @endif
                 <div class="customer-info-item">
                     <span class="customer-info-icon"><i class="fas fa-phone"></i></span>
                     <div>

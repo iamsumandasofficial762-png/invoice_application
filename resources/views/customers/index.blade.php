@@ -20,7 +20,7 @@
                     id="customerLiveSearch"
                     name="search"
                     value="{{ $search }}"
-                    placeholder="Search by name, GST, state, phone, or Gmail"
+                    placeholder="Search by name, GST, state, phone, or email"
                     autocomplete="off"
                 >
             </div>

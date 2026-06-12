@@ -29,14 +29,20 @@
         const name = document.createElement('strong');
         name.textContent = customer.name || '-';
 
-        preview.append(
+        const lines = [
             name,
             createLine(customer.address),
             createLine((customer.state || '-') + ' - ' + (customer.pin || '-')),
             createLine('Phone: ' + (customer.phone || '-')),
-            createLine('Gmail: ' + (customer.gmail || '-')),
-            createLine('GSTIN: ' + (customer.gst || '-')),
-        );
+        ];
+
+        if (customer.gmail) {
+            lines.push(createLine('Email: ' + customer.gmail));
+        }
+
+        lines.push(createLine('GSTIN: ' + (customer.gst || '-')));
+
+        preview.append(...lines);
     }
 
     function customerFromSelectedOption() {
@@ -101,7 +107,7 @@
             url: select.dataset.select2Url,
         },
         minimumInputLength: 0,
-        placeholder: 'Select customer or search by name, GST, state, phone, or gmail',
+        placeholder: 'Select customer or search by name, GST, state, phone, or email',
         width: '100%',
     });
 

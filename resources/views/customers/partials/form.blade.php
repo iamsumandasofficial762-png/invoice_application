@@ -20,7 +20,7 @@
         <x-form-error name="phone" />
     </label>
     <label>
-        <span>Gmail</span>
+        <span>Email</span>
         <input type="email" name="gmail" value="{{ old('gmail', $customer?->gmail) }}">
         <x-form-error name="gmail" />
     </label>

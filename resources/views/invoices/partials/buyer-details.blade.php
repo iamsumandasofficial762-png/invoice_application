@@ -54,7 +54,9 @@
             <span>{{ $selectedCustomer->address }}</span>
             <span>{{ $selectedCustomer->state }} - {{ $selectedCustomer->pin }}</span>
             <span>Phone: {{ $selectedCustomer->phone ?? '-' }}</span>
-            <span>Gmail: {{ $selectedCustomer->gmail ?? '-' }}</span>
+            @if (!empty($selectedCustomer->gmail))
+                <span>Email: {{ $selectedCustomer->gmail }}</span>
+            @endif
             <span>GSTIN: {{ $selectedCustomer->gst }}</span>
         @else
             Select a customer to show details.

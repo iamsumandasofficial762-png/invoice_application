@@ -5,7 +5,9 @@
         <p>{{ $invoice->customer->address }}</p>
         <p>{{ $invoice->customer->state }} - {{ $invoice->customer->pin }}</p>
         <p>Phone: {{ $invoice->customer->phone ?? '-' }}</p>
-        <p>Gmail: {{ $invoice->customer->gmail ?? '-' }}</p>
+        @if (!empty($invoice->customer->gmail))
+            <p>Email: {{ $invoice->customer->gmail }}</p>
+        @endif
         <p>GSTIN: {{ $invoice->customer->gst }}</p>
     </div>
     <div>
