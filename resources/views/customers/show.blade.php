@@ -10,11 +10,15 @@
             </div>
 
             <div class="customer-profile-actions">
-                <a class="profile-action profile-action-edit" href="{{ route('customers.edit', $customer) }}">Edit</a>
+                <a class="profile-action profile-action-edit icon-btn icon-btn-warning" href="{{ route('customers.edit', $customer) }}" title="Edit customer" aria-label="Edit customer">
+                    <i class="fas fa-pen"></i>
+                </a>
                 <form method="POST" action="{{ route('customers.destroy', $customer) }}" data-confirm="Are you sure you want to delete this customer?">
                     @csrf
                     @method('DELETE')
-                    <button class="profile-action profile-action-delete" type="submit">Delete</button>
+                    <button class="profile-action profile-action-delete icon-btn icon-btn-danger" type="submit" title="Delete customer" aria-label="Delete customer">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </form>
             </div>
         </div>

@@ -1,6 +1,4 @@
 (function () {
-    const customerSelect = document.getElementById('customer_id');
-    const customerDetails = document.getElementById('selected-customer-details');
     const itemsBody = document.querySelector('[data-items-body]');
     const rowTemplate = document.getElementById('item-row-template');
     const addItemButton = document.querySelector('[data-add-item]');
@@ -80,28 +78,8 @@
         frame?.classList.add('has-signature');
     }
 
-    function refreshCustomerDetails() {
-        if (!customerSelect || !customerDetails) {
-            return;
-        }
-
-        const selected = customerSelect.options[customerSelect.selectedIndex];
-
-        if (!selected || !selected.value) {
-            customerDetails.textContent = 'Select a customer to show details.';
-            customerDetails.classList.add('empty-state');
-            return;
-        }
-
-        customerDetails.classList.remove('empty-state');
-        customerDetails.innerHTML = [
-            '<strong>' + selected.dataset.name + '</strong>',
-            '<span>' + selected.dataset.address + '</span>',
-            '<span>' + selected.dataset.state + ' - ' + selected.dataset.pin + '</span>',
-            '<span>Phone: ' + (selected.dataset.phone || '-') + '</span>',
-            '<span>Gmail: ' + (selected.dataset.gmail || '-') + '</span>',
-            '<span>GSTIN: ' + selected.dataset.gst + '</span>',
-        ].join('');
+    function isMobileItemsView() {
+        return window.matchMedia('(max-width: 767px)').matches;
     }
 
     function refreshRows() {
@@ -109,14 +87,20 @@
             return;
         }
 
-        itemsBody.querySelectorAll('[data-item-row]').forEach(function (row, index) {
-            row.querySelector('.sr-no').textContent = index + 1;
+        const shouldRenumberVisibleRows = !isMobileItemsView();
+        const rows = itemsBody.querySelectorAll('[data-item-row]');
+
+        rows.forEach(function (row, index) {
+            if (shouldRenumberVisibleRows) {
+                row.querySelector('.sr-no').textContent = index + 1;
+            }
+
             row.querySelectorAll('input, textarea').forEach(function (field) {
                 field.name = field.name.replace(/items\[[^\]]+\]/, 'items[' + index + ']');
             });
 
             const removeButton = row.querySelector('[data-remove-item]');
-            removeButton.disabled = itemsBody.querySelectorAll('[data-item-row]').length === 1;
+            removeButton.disabled = rows.length === 1;
         });
     }
 
@@ -158,9 +142,22 @@
     }
 
     function addItemRow() {
-        const index = itemsBody.querySelectorAll('[data-item-row]').length;
+        const rows = itemsBody.querySelectorAll('[data-item-row]');
+        const index = rows.length;
+        const itemNumber = index + 1;
         const html = rowTemplate.innerHTML.replaceAll('__INDEX__', index);
-        itemsBody.insertAdjacentHTML('beforeend', html);
+        const isMobile = isMobileItemsView();
+        const position = isMobile ? 'afterbegin' : 'beforeend';
+
+        itemsBody.insertAdjacentHTML(position, html);
+        const newRow = isMobile
+            ? itemsBody.querySelector('[data-item-row]')
+            : itemsBody.querySelector('[data-item-row]:last-child');
+
+        if (newRow) {
+            newRow.querySelector('.sr-no').textContent = itemNumber;
+        }
+
         refreshRows();
         recalculate();
     }
@@ -173,23 +170,6 @@
         document.getElementById(id)?.classList.remove('is-open');
     }
 
-    function addCustomerOption(customer) {
-        const option = document.createElement('option');
-        option.value = customer.id;
-        option.textContent = customer.name + ' - ' + customer.gst;
-        option.dataset.name = customer.name;
-        option.dataset.address = customer.address;
-        option.dataset.state = customer.state;
-        option.dataset.pin = customer.pin;
-        option.dataset.phone = customer.phone || '';
-        option.dataset.gmail = customer.gmail || '';
-        option.dataset.gst = customer.gst;
-        option.selected = true;
-        customerSelect.appendChild(option);
-        refreshCustomerDetails();
-    }
-
-    customerSelect?.addEventListener('change', refreshCustomerDetails);
     signatureSelect?.addEventListener('change', refreshSignaturePreview);
     addItemButton?.addEventListener('click', addItemRow);
 
@@ -246,7 +226,9 @@
                 return response.json();
             })
             .then(function (data) {
-                addCustomerOption(data.customer);
+                if (window.selectInvoiceCustomer) {
+                    window.selectInvoiceCustomer(data.customer);
+                }
                 ajaxCustomerForm.reset();
                 closeModal('customer-modal');
             })
@@ -259,7 +241,6 @@
             });
     });
 
-    refreshCustomerDetails();
     refreshSignaturePreview();
     refreshRows();
     recalculate();

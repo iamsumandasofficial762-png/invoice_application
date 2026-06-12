@@ -1,0 +1,121 @@
+.icon-btn {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 10px;
+    color: #ffffff;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    flex: 0 0 auto;
+    gap: 0;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.icon-btn i {
+    display: block;
+    font-size: 16px;
+    line-height: 1;
+    margin: 0;
+}
+
+.icon-btn:hover,
+.icon-btn:focus {
+    color: #ffffff;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 12px 22px rgba(15, 23, 42, 0.18);
+    filter: brightness(1.04);
+}
+
+.icon-btn:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.25);
+    outline-offset: 2px;
+}
+
+.icon-btn-primary {
+    background: #2563eb;
+}
+
+.icon-btn-warning {
+    background: #f97316;
+}
+
+.icon-btn-success {
+    background: #22c55e;
+}
+
+.icon-btn-danger {
+    background: #ef4444;
+}
+
+.icon-btn-info {
+    background: #6d5dfc;
+}
+
+.action-group,
+.customer-actions,
+.customer-profile-actions,
+.invoice-list-actions,
+.invoice-mobile-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.action-group form,
+.customer-actions form,
+.customer-profile-actions form,
+.invoice-list-actions form,
+.invoice-mobile-actions form {
+    display: inline-flex;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .icon-btn {
+        width: 46px;
+        min-width: 46px;
+        height: 46px;
+    }
+
+    .icon-btn i {
+        font-size: 17px;
+    }
+
+    .customer-actions,
+    .invoice-action-buttons,
+    .invoice-mobile-actions {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        width: 100%;
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    .customer-actions form,
+    .invoice-action-buttons form,
+    .invoice-mobile-actions form {
+        display: contents;
+    }
+
+    .customer-actions .icon-btn,
+    .invoice-action-buttons .icon-btn,
+    .invoice-mobile-actions .icon-btn {
+        width: 100%;
+        min-width: 0;
+        height: 46px;
+    }
+
+    .invoice-action-buttons .btn {
+        width: 100%;
+    }
+}

@@ -14,9 +14,29 @@
     margin-bottom: 16px;
 }
 
-.customer-list-toolbar > div {
+.customer-list-toolbar > .list-search-control {
     max-width: 520px;
     width: 100%;
+}
+
+.list-control-form {
+    flex-wrap: wrap;
+}
+
+.per-page-control {
+    align-items: center;
+    color: #344054;
+    display: flex;
+    font-size: 13px;
+    font-weight: 700;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.per-page-control select {
+    min-width: 78px;
+    padding: 8px 28px 8px 10px;
+    width: auto;
 }
 
 .search-label {
@@ -142,6 +162,12 @@
 
 #customerPagination:empty {
     display: none;
+}
+
+.list-pagination {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
 }
 
 .customer-profile-card {
@@ -292,6 +318,16 @@
         flex-direction: column;
     }
 
+    .per-page-control {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        margin-bottom: 0;
+    }
+
+    .list-pagination {
+        justify-content: center;
+    }
+
     .customer-count {
         margin-bottom: 0;
         white-space: normal;
@@ -321,4 +357,85 @@
     .customer-profile-column + .customer-profile-column {
         margin-top: 28px;
     }
+}
+
+.customer-list-card,
+.customer-profile-card {
+    background: var(--color-card);
+    border-color: var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+.customer-table-wrap {
+    border-color: var(--color-border);
+    border-radius: 12px;
+}
+
+.customer-table th {
+    background: #f0f6ff;
+    color: #334155;
+}
+
+.customer-table td {
+    border-bottom-color: #e6eef8;
+}
+
+.customer-table tbody tr:hover {
+    background: #f3f8ff;
+}
+
+.gst-badge,
+.customer-profile-badge {
+    background: #eaf2ff;
+    border-color: #bfdbfe;
+    color: var(--color-primary-hover);
+}
+
+.customer-action,
+.profile-action {
+    border-radius: 8px;
+}
+
+.customer-action-view,
+.profile-action-view {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+}
+
+.customer-action-edit,
+.profile-action-edit {
+    background: var(--color-warning);
+    color: #fff;
+}
+
+.customer-action-delete,
+.profile-action-delete {
+    background: var(--color-danger);
+    color: #fff;
+}
+
+.customer-count,
+.customer-empty-state,
+.customer-info-item span:not(.customer-info-icon) {
+    color: var(--color-muted);
+}
+
+.customer-profile-header,
+.customer-profile-column + .customer-profile-column {
+    border-color: var(--color-border);
+}
+
+.customer-info-icon {
+    background: #eaf2ff;
+    color: var(--color-primary);
+}
+
+.per-page-control select {
+    border-color: var(--color-border);
+}
+
+.list-pagination nav {
+    color: var(--color-muted);
 }

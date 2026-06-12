@@ -12,7 +12,17 @@
     <section class="invoice-meta-row">
         <label>
             <span>Invoice Number</span>
-            <input type="text" value="{{ $invoiceNumber }}" readonly>
+            <input
+                type="text"
+                name="invoice_number"
+                id="invoiceNumberInput"
+                value="{{ old('invoice_number', $invoiceNumber) }}"
+                data-check-url="{{ route('invoices.checkNumber') }}"
+                data-invoice-id="{{ $invoice?->id }}"
+                required
+            >
+            <div id="invoiceNumberFeedback" class="invoice-number-feedback" data-invoice-number-feedback></div>
+            <x-form-error name="invoice_number" />
         </label>
         <label>
             <span>Invoice Date</span>

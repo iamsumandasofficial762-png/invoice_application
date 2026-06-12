@@ -13,19 +13,23 @@ class CustomerController extends Controller
     public function index(Request $request): View
     {
         $search = $request->string('search')->toString();
+        $perPage = $this->perPage($request);
 
         $customers = Customer::query()
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', "%{$search}%")
-                        ->orWhere('gst', 'like', "%{$search}%");
+                        ->orWhere('gst', 'like', "%{$search}%")
+                        ->orWhere('state', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%")
+                        ->orWhere('gmail', 'like', "%{$search}%");
                 });
             })
             ->latest()
-            ->paginate(10)
+            ->paginate($perPage)
             ->withQueryString();
 
-        return view('customers.index', compact('customers', 'search'));
+        return view('customers.index', compact('customers', 'search', 'perPage'));
     }
 
     public function create(): View
@@ -76,9 +80,78 @@ class CustomerController extends Controller
         ], 201);
     }
 
+    public function searchJson(Request $request): JsonResponse
+    {
+        $search = trim($request->string('q')->toString());
+
+        if (strlen($search) < 2) {
+            return response()->json(['customers' => []]);
+        }
+
+        $customers = Customer::query()
+            ->where(function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('gst', 'like', "%{$search}%")
+                    ->orWhere('state', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('gmail', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->limit(10)
+            ->get();
+
+        return response()->json([
+            'customers' => $customers->map(fn (Customer $customer) => [
+                'id' => $customer->id,
+                'name' => $customer->name,
+                'address' => $customer->address,
+                'state' => $customer->state,
+                'pin' => $customer->pin,
+                'phone' => $customer->phone,
+                'gmail' => $customer->gmail,
+                'gst' => $customer->gst,
+            ])->values(),
+        ]);
+    }
+
+    public function select2Search(Request $request): JsonResponse
+    {
+        $search = trim((string) $request->query('q', $request->query('term', '')));
+
+        $customers = Customer::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('gst', 'like', "%{$search}%")
+                    ->orWhere('state', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('gmail', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->limit(20)
+            ->get();
+
+        return response()->json([
+            'results' => $customers->map(fn (Customer $customer) => [
+                'id' => $customer->id,
+                'text' => $customer->name.' - '.$customer->gst,
+                'customer' => [
+                    'id' => $customer->id,
+                    'name' => $customer->name,
+                    'address' => $customer->address,
+                    'state' => $customer->state,
+                    'pin' => $customer->pin,
+                    'phone' => $customer->phone,
+                    'gmail' => $customer->gmail,
+                    'gst' => $customer->gst,
+                ],
+            ])->values(),
+        ]);
+    }
+
     public function liveSearch(Request $request): JsonResponse
     {
         $search = trim($request->string('search')->toString());
+        $perPage = $this->perPage($request);
 
         $customers = Customer::query()
             ->when($search !== '', function ($query) use ($search) {
@@ -91,10 +164,11 @@ class CustomerController extends Controller
                 });
             })
             ->latest()
-            ->get();
+            ->paginate($perPage)
+            ->withQueryString();
 
         return response()->json([
-            'customers' => $customers->map(fn (Customer $customer) => [
+            'customers' => $customers->getCollection()->map(fn (Customer $customer) => [
                 'id' => $customer->id,
                 'name' => $customer->name,
                 'gst' => $customer->gst,
@@ -105,8 +179,15 @@ class CustomerController extends Controller
                 'edit_url' => route('customers.edit', $customer),
                 'delete_url' => route('customers.destroy', $customer),
             ])->values(),
-            'count' => $customers->count(),
+            'count' => $customers->total(),
         ]);
+    }
+
+    private function perPage(Request $request): int
+    {
+        $perPage = (int) $request->query('per_page', 10);
+
+        return in_array($perPage, [10, 25, 50, 100], true) ? $perPage : 10;
     }
 
     private function validatedData(Request $request): array

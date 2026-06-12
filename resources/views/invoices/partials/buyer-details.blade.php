@@ -1,27 +1,63 @@
+@php
+    $selectedCustomerId = old('customer_id', $invoice?->customer_id);
+    $selectedCustomer = $customers->firstWhere('id', (int) $selectedCustomerId);
+    $selectedCustomerLabel = $selectedCustomer
+        ? $selectedCustomer->name.' - '.$selectedCustomer->gst
+        : '';
+@endphp
+
 <div class="invoice-party-box">
     <div class="party-heading-row">
         <h3>BUYER DETAILS</h3>
         <button class="btn btn-secondary btn-sm" type="button" data-modal-open="customer-modal">Create New Customer</button>
     </div>
-    <label>
+    <label class="customer-selector">
         <span>Customer</span>
-        <select name="customer_id" id="customer_id" required>
+        <select
+            name="customer_id"
+            id="customerSelect2"
+            class="customer-select2"
+            data-select2-url="{{ route('customers.select2Search') }}"
+            required
+        >
             <option value="">Select customer</option>
-            @foreach ($customers as $customer)
+            @if ($selectedCustomer)
                 <option
-                    value="{{ $customer->id }}"
-                    data-name="{{ $customer->name }}"
-                    data-address="{{ $customer->address }}"
-                    data-state="{{ $customer->state }}"
-                    data-pin="{{ $customer->pin }}"
-                    data-phone="{{ $customer->phone }}"
-                    data-gmail="{{ $customer->gmail }}"
-                    data-gst="{{ $customer->gst }}"
-                    @selected((string) old('customer_id', $invoice?->customer_id) === (string) $customer->id)
-                >{{ $customer->name }} - {{ $customer->gst }}</option>
-            @endforeach
+                    value="{{ $selectedCustomer->id }}"
+                    selected
+                    data-name="{{ $selectedCustomer->name }}"
+                    data-address="{{ $selectedCustomer->address }}"
+                    data-state="{{ $selectedCustomer->state }}"
+                    data-pin="{{ $selectedCustomer->pin }}"
+                    data-phone="{{ $selectedCustomer->phone }}"
+                    data-gmail="{{ $selectedCustomer->gmail }}"
+                    data-gst="{{ $selectedCustomer->gst }}"
+                >{{ $selectedCustomerLabel }}</option>
+            @endif
         </select>
         <x-form-error name="customer_id" />
     </label>
-    <div id="selected-customer-details" class="customer-preview invoice-customer-preview">Select a customer to show details.</div>
+    <div
+        id="buyerDetailsPreview"
+        class="customer-preview invoice-customer-preview"
+        data-buyer-details-preview
+        data-name="{{ $selectedCustomer?->name }}"
+        data-address="{{ $selectedCustomer?->address }}"
+        data-state="{{ $selectedCustomer?->state }}"
+        data-pin="{{ $selectedCustomer?->pin }}"
+        data-phone="{{ $selectedCustomer?->phone }}"
+        data-gmail="{{ $selectedCustomer?->gmail }}"
+        data-gst="{{ $selectedCustomer?->gst }}"
+    >
+        @if ($selectedCustomer)
+            <strong>{{ $selectedCustomer->name }}</strong>
+            <span>{{ $selectedCustomer->address }}</span>
+            <span>{{ $selectedCustomer->state }} - {{ $selectedCustomer->pin }}</span>
+            <span>Phone: {{ $selectedCustomer->phone ?? '-' }}</span>
+            <span>Gmail: {{ $selectedCustomer->gmail ?? '-' }}</span>
+            <span>GSTIN: {{ $selectedCustomer->gst }}</span>
+        @else
+            Select a customer to show details.
+        @endif
+    </div>
 </div>

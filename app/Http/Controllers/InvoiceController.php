@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class InvoiceController extends Controller
@@ -30,6 +31,7 @@ class InvoiceController extends Controller
     public function index(Request $request): View
     {
         $search = $request->string('search')->toString();
+        $perPage = $this->perPage($request);
 
         $invoices = Invoice::with('customer')
             ->when($search, function ($query) use ($search) {
@@ -41,10 +43,10 @@ class InvoiceController extends Controller
                     });
             })
             ->latest()
-            ->paginate(10)
+            ->paginate($perPage)
             ->withQueryString();
 
-        return view('invoices.index', compact('invoices', 'search'));
+        return view('invoices.index', compact('invoices', 'search', 'perPage'));
     }
 
     public function create(): View
@@ -59,13 +61,14 @@ class InvoiceController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $this->validatedData($request);
+        $this->ensureUniqueInvoiceNumber($validated['invoice_number']);
         $invoice = null;
 
         DB::transaction(function () use ($validated, &$invoice) {
             $calculation = $this->calculationService->calculate($validated['items']);
             $invoice = Invoice::create([
                 'customer_id' => $validated['customer_id'],
-                'invoice_number' => $this->invoiceNumberService->next(),
+                'invoice_number' => $validated['invoice_number'],
                 'invoice_date' => $validated['invoice_date'],
                 'subtotal' => $calculation['subtotal'],
                 'cgst' => $calculation['cgst'],
@@ -108,11 +111,13 @@ class InvoiceController extends Controller
     public function update(Request $request, Invoice $invoice): RedirectResponse
     {
         $validated = $this->validatedData($request);
+        $this->ensureUniqueInvoiceNumber($validated['invoice_number'], $invoice->id);
 
         DB::transaction(function () use ($validated, $invoice) {
             $calculation = $this->calculationService->calculate($validated['items']);
             $invoice->update([
                 'customer_id' => $validated['customer_id'],
+                'invoice_number' => $validated['invoice_number'],
                 'invoice_date' => $validated['invoice_date'],
                 'subtotal' => $calculation['subtotal'],
                 'cgst' => $calculation['cgst'],
@@ -141,10 +146,17 @@ class InvoiceController extends Controller
     public function downloadPdf(Invoice $invoice)
     {
         $invoice->load(['customer', 'items']);
+        $fileName = preg_replace('/[^A-Za-z0-9\-]/', '-', $invoice->invoice_number).'.pdf';
 
-        return Pdf::loadView('invoices.pdf', compact('invoice'))
-            ->setPaper('a4')
-            ->download(str_replace('/', '-', $invoice->invoice_number).'.pdf');
+        $pdf = Pdf::loadView('invoices.pdf', compact('invoice'))
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'DejaVu Sans',
+            ]);
+
+        return $pdf->download($fileName);
     }
 
     public function print(Invoice $invoice): View
@@ -152,6 +164,11 @@ class InvoiceController extends Controller
         $invoice->load(['customer', 'items']);
 
         return view('invoices.print', compact('invoice'));
+    }
+
+    public function image(Invoice $invoice): RedirectResponse
+    {
+        return redirect()->route('invoices.pdf', $invoice);
     }
 
     public function updateStatus(Request $request, Invoice $invoice): RedirectResponse
@@ -169,9 +186,32 @@ class InvoiceController extends Controller
             ->with('success', 'Invoice status updated successfully.');
     }
 
+    public function checkNumber(Request $request)
+    {
+        $invoiceNumber = trim($request->string('invoice_number')->toString());
+        $ignoreId = $request->integer('invoice_id') ?: null;
+
+        if ($invoiceNumber === '') {
+            return response()->json([
+                'exists' => false,
+                'message' => '',
+                'suggested' => null,
+            ]);
+        }
+
+        $exists = $this->invoiceNumberExists($invoiceNumber, $ignoreId);
+
+        return response()->json([
+            'exists' => $exists,
+            'message' => $exists ? 'This invoice number is already used.' : '',
+            'suggested' => $exists ? $this->invoiceNumberService->suggestAvailableNumber($invoiceNumber) : null,
+        ]);
+    }
+
     public function liveSearch(Request $request)
     {
         $search = trim($request->string('search')->toString());
+        $perPage = $this->perPage($request);
 
         $invoices = Invoice::with('customer')
             ->when($search !== '', function ($query) use ($search) {
@@ -184,10 +224,11 @@ class InvoiceController extends Controller
                     });
             })
             ->latest()
-            ->get();
+            ->paginate($perPage)
+            ->withQueryString();
 
         return response()->json([
-            'invoices' => $invoices->map(fn (Invoice $invoice) => [
+            'invoices' => $invoices->getCollection()->map(fn (Invoice $invoice) => [
                 'id' => $invoice->id,
                 'invoice_number' => $invoice->invoice_number,
                 'invoice_date' => $invoice->invoice_date->format('d-m-Y'),
@@ -200,21 +241,61 @@ class InvoiceController extends Controller
                 'pdf_url' => route('invoices.pdf', $invoice),
                 'print_url' => route('invoices.print', $invoice),
                 'delete_url' => route('invoices.destroy', $invoice),
+                'share_url' => route('invoices.pdf', $invoice),
+                'image_url' => route('invoices.image', $invoice),
             ])->values(),
-            'count' => $invoices->count(),
+            'count' => $invoices->total(),
         ]);
     }
 
     private function validatedData(Request $request): array
     {
-        return $request->validate([
+        $validated = $request->validate([
             'customer_id' => ['required', 'exists:customers,id'],
+            'invoice_number' => ['required', 'string', 'max:100'],
             'invoice_date' => ['required', 'date'],
             'signature_image' => ['required', Rule::in(array_keys($this->signatures))],
             'items' => ['required', 'array', 'min:1'],
             'items.*.description' => ['required', 'string'],
-            'items.*.sac_code' => ['required', 'string', 'max:191'],
+            'items.*.sac_code' => ['nullable', 'string', 'max:191'],
             'items.*.unit_price' => ['required', 'numeric', 'min:0'],
         ]);
+
+        $validated['items'] = collect($validated['items'])
+            ->map(function (array $item) {
+                $item['sac_code'] = trim((string) ($item['sac_code'] ?? '')) ?: '9983';
+
+                return $item;
+            })
+            ->all();
+
+        return $validated;
+    }
+
+    private function ensureUniqueInvoiceNumber(string $invoiceNumber, ?int $ignoreId = null): void
+    {
+        if (! $this->invoiceNumberExists($invoiceNumber, $ignoreId)) {
+            return;
+        }
+
+        $suggested = $this->invoiceNumberService->suggestAvailableNumber($invoiceNumber);
+
+        throw ValidationException::withMessages([
+            'invoice_number' => 'This invoice number is already used. Please use a different invoice number. Suggested invoice number: '.$suggested,
+        ]);
+    }
+
+    private function invoiceNumberExists(string $invoiceNumber, ?int $ignoreId = null): bool
+    {
+        return Invoice::where('invoice_number', $invoiceNumber)
+            ->when($ignoreId, fn ($query) => $query->whereKeyNot($ignoreId))
+            ->exists();
+    }
+
+    private function perPage(Request $request): int
+    {
+        $perPage = (int) $request->query('per_page', 10);
+
+        return in_array($perPage, [10, 25, 50, 100], true) ? $perPage : 10;
     }
 }

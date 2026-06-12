@@ -14,9 +14,29 @@
     margin-bottom: 16px;
 }
 
-.invoice-list-toolbar > div {
+.invoice-list-toolbar > .list-search-control {
     max-width: 520px;
     width: 100%;
+}
+
+.list-control-form {
+    flex-wrap: wrap;
+}
+
+.per-page-control {
+    align-items: center;
+    color: #344054;
+    display: flex;
+    font-size: 13px;
+    font-weight: 700;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.per-page-control select {
+    min-width: 78px;
+    padding: 8px 28px 8px 10px;
+    width: auto;
 }
 
 .invoice-count {
@@ -93,6 +113,11 @@
     color: #fff;
 }
 
+.invoice-action-share {
+    background: #0f766e;
+    color: #fff;
+}
+
 .invoice-action-edit {
     background: #fdbf35;
     color: #111827;
@@ -127,6 +152,12 @@
     display: none;
 }
 
+.list-pagination {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+
 @media (max-width: 760px) {
     .invoice-list-card {
         padding: 14px;
@@ -137,8 +168,78 @@
         flex-direction: column;
     }
 
+    .per-page-control {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        margin-bottom: 0;
+    }
+
+    .list-pagination {
+        justify-content: center;
+    }
+
     .invoice-count {
         margin-bottom: 0;
         white-space: normal;
     }
+}
+
+.invoice-list-card {
+    background: var(--color-card);
+    border-color: var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+.invoice-table-wrap {
+    border-color: var(--color-border);
+    border-radius: 12px;
+}
+
+.invoice-list-table th {
+    background: #f0f6ff;
+    color: #334155;
+}
+
+.invoice-list-table td {
+    border-bottom-color: #e6eef8;
+}
+
+.invoice-list-table tbody tr:hover {
+    background: #f3f8ff;
+}
+
+.invoice-list-action {
+    border-radius: 8px;
+}
+
+.invoice-action-view,
+.invoice-action-pdf,
+.invoice-action-print {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.invoice-action-share {
+    background: var(--color-success);
+    color: #fff;
+}
+
+.invoice-action-edit {
+    background: var(--color-warning);
+    color: #fff;
+}
+
+.invoice-action-delete {
+    background: var(--color-danger);
+    color: #fff;
+}
+
+.invoice-count,
+.invoice-empty-state {
+    color: var(--color-muted);
+}
+
+.per-page-control select {
+    border-color: var(--color-border);
 }

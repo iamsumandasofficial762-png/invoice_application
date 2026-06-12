@@ -33,4 +33,28 @@ class InvoiceNumberService
 
         return $prefix.sprintf('%03d', $nextNumber);
     }
+
+    public function suggestAvailableNumber(?string $preferredNumber = null): string
+    {
+        if ($preferredNumber && preg_match('/^(.*?)(\d+)$/', $preferredNumber, $matches)) {
+            $prefix = $matches[1];
+            $number = (int) $matches[2];
+            $padding = max(3, strlen($matches[2]));
+
+            do {
+                $number++;
+                $suggested = $prefix.str_pad((string) $number, $padding, '0', STR_PAD_LEFT);
+            } while (Invoice::where('invoice_number', $suggested)->exists());
+
+            return $suggested;
+        }
+
+        $suggested = $this->next();
+
+        while (Invoice::where('invoice_number', $suggested)->exists()) {
+            $suggested = $this->suggestAvailableNumber($suggested);
+        }
+
+        return $suggested;
+    }
 }

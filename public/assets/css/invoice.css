@@ -7,6 +7,58 @@
     max-width: 900px;
 }
 
+.invoice-wrapper {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.invoice-wrapper > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+}
+
+.invoice-status-panel,
+.status-confirm-card {
+    background: var(--color-card);
+    border-color: var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+.invoice-status-label,
+.status-confirm-card p {
+    color: var(--color-muted);
+}
+
+.invoice-action-buttons .btn,
+.status-action-button {
+    border-radius: 8px;
+}
+
+.invoice-action-buttons .action-button-edit {
+    background: var(--color-warning);
+    color: #fff;
+}
+
+.invoice-action-buttons .action-button-pdf,
+.invoice-action-buttons .action-button-print {
+    background: var(--color-primary);
+}
+
+.invoice-action-buttons .action-button-share,
+.status-action-paid {
+    background: var(--color-success);
+}
+
+.invoice-action-buttons .action-button-delete,
+.status-action-cancel {
+    background: var(--color-danger);
+}
+
+.status-confirm-modal {
+    background: rgba(7, 29, 53, .52);
+}
+
 .invoice-status-panel {
     align-items: center;
     background: #fff;
@@ -34,6 +86,42 @@
     gap: 10px;
 }
 
+.invoice-action-buttons {
+    align-items: center;
+}
+
+.invoice-action-buttons .btn {
+    align-items: center;
+    border: 0;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: 800;
+    min-height: 42px;
+    padding: 11px 16px;
+}
+
+.invoice-action-buttons .action-button-edit {
+    background: #fbbf24;
+    color: #111827;
+}
+
+.invoice-action-buttons .action-button-pdf,
+.invoice-action-buttons .action-button-print {
+    background: #0f5f9f;
+}
+
+.invoice-action-buttons .action-button-share {
+    background: #0f766e;
+}
+
+.invoice-action-buttons .action-button-delete {
+    background: #dc2626;
+}
+
+.invoice-action-buttons .btn:hover {
+    filter: brightness(.95);
+}
+
 .status-action-button {
     border: 0;
     border-radius: 6px;
@@ -48,7 +136,7 @@
     color: #fff;
 }
 
-.status-action-unpaid {
+.status-action-cancel {
     background: #dc2626;
     color: #fff;
 }
@@ -92,6 +180,58 @@
     gap: 10px;
     justify-content: flex-end;
     margin-top: 22px;
+}
+
+.status-confirm-button {
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    font-weight: 800;
+    justify-content: center;
+    min-height: 40px;
+    min-width: 90px;
+    padding: 10px 16px;
+}
+
+.status-confirm-submit {
+    background: var(--color-primary, #2563eb);
+    border: 1px solid var(--color-primary, #2563eb);
+    color: #fff;
+}
+
+.status-confirm-cancel {
+    background: #fff;
+    border: 1px solid var(--color-border, #dbe5f1);
+    color: var(--color-text, #0f172a);
+}
+
+.status-confirm-modal.is-paid-action .status-confirm-submit {
+    background: var(--color-success, #22c55e);
+    border-color: var(--color-success, #22c55e);
+    color: #fff;
+}
+
+.status-confirm-modal.is-paid-action .status-confirm-cancel {
+    background: #fff;
+    border-color: var(--color-border, #dbe5f1);
+    color: var(--color-text, #0f172a);
+}
+
+.status-confirm-modal.is-cancel-action .status-confirm-submit {
+    background: #fff;
+    border-color: var(--color-border, #dbe5f1);
+    color: var(--color-text, #0f172a);
+}
+
+.status-confirm-modal.is-cancel-action .status-confirm-cancel {
+    background: var(--color-danger, #ef4444);
+    border-color: var(--color-danger, #ef4444);
+    color: #fff;
+}
+
+.status-confirm-button:hover {
+    filter: brightness(.97);
 }
 
 .invoice-image-header,
@@ -250,7 +390,7 @@
 .invoice-amount-word-row,
 .invoice-payment-row {
     display: grid;
-    grid-template-columns: 34% 66%;
+    grid-template-columns: 50% 50%;
 }
 
 .invoice-amount-word-row > *,
@@ -262,13 +402,15 @@
 
 .invoice-bank-signature-grid {
     display: grid;
-    grid-template-columns: 34% 66%;
+    grid-template-columns: 50% 50%;
     min-height: 190px;
 }
 
 .bank-details-block {
     border-right: 2px solid #111;
     padding: 8px;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .bank-details-block h3,
@@ -332,4 +474,37 @@
     .bank-details-block {
         border-right: 0;
     }
+}
+
+.invoice-status-panel,
+.status-confirm-card {
+    background: var(--color-card);
+    border-color: var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+.invoice-action-buttons .btn,
+.status-action-button {
+    border-radius: 8px;
+}
+
+.invoice-action-buttons .action-button-edit {
+    background: var(--color-warning);
+    color: #fff;
+}
+
+.invoice-action-buttons .action-button-pdf,
+.invoice-action-buttons .action-button-print {
+    background: var(--color-primary);
+}
+
+.invoice-action-buttons .action-button-share,
+.status-action-paid {
+    background: var(--color-success);
+}
+
+.invoice-action-buttons .action-button-delete,
+.status-action-cancel {
+    background: var(--color-danger);
 }

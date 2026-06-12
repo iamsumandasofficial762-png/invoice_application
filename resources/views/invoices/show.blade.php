@@ -1,10 +1,12 @@
 <x-layouts.app title="Invoice {{ $invoice->invoice_number }}">
     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/css/invoice.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/invoice-share.css') }}">
     @endpush
 
     @push('scripts')
         <script src="{{ asset('assets/js/invoice-status.js') }}"></script>
+        <script src="{{ asset('assets/js/invoice-share.js') }}"></script>
     @endpush
 
     <section class="page-header">
@@ -12,7 +14,15 @@
             <p class="eyebrow">Invoice</p>
             <h1>{{ $invoice->invoice_number }}</h1>
         </div>
-        <x-action-buttons :item="$invoice" route-prefix="invoices" show-pdf="true" show-print="true" />
+        <x-action-buttons
+            :item="$invoice"
+            route-prefix="invoices"
+            :show-view="false"
+            show-pdf="true"
+            show-print="true"
+            show-share="true"
+            class="invoice-action-buttons"
+        />
     </section>
 
     <section class="invoice-status-panel">
@@ -28,19 +38,21 @@
                 type="button"
                 data-status-trigger
                 data-status="paid"
+                data-status-text="paid"
                 data-action="{{ route('invoices.status', $invoice) }}"
             >Paid</button>
             <button
-                class="status-action-button status-action-unpaid"
+                class="status-action-button status-action-cancel"
                 type="button"
                 data-status-trigger
                 data-status="unpaid"
+                data-status-text="cancel"
                 data-action="{{ route('invoices.status', $invoice) }}"
-            >Unpaid</button>
+            >Cancel</button>
         </div>
     </section>
 
-    @include('invoices.partials.invoice-document', ['invoice' => $invoice])
+    @include('invoices.partials.invoice-template', ['invoice' => $invoice])
 
     <div class="status-confirm-modal" id="statusConfirmModal" aria-hidden="true">
         <div class="status-confirm-card">
@@ -51,10 +63,11 @@
                 @method('PATCH')
                 <input type="hidden" name="payment_status" id="statusConfirmValue">
                 <div class="status-confirm-actions">
-                    <button class="btn btn-light" type="button" data-status-cancel>Cancel</button>
-                    <button class="btn btn-primary" type="submit">Confirm</button>
+                    <button class="btn status-confirm-button status-confirm-cancel" type="button" data-status-cancel>Cancel</button>
+                    <button class="btn status-confirm-button status-confirm-submit" type="submit" data-status-confirm>Confirm</button>
                 </div>
             </form>
         </div>
     </div>
+
 </x-layouts.app>

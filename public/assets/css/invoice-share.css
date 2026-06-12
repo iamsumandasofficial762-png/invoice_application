@@ -1,0 +1,257 @@
+.invoice-share-modal {
+    align-items: center;
+    background: rgba(16, 24, 40, .42);
+    display: none;
+    inset: 0;
+    justify-content: center;
+    padding: 20px;
+    position: fixed;
+    z-index: 60;
+}
+
+.invoice-share-modal.is-open {
+    display: flex;
+}
+
+.invoice-share-card {
+    background: #fff;
+    border: 1px solid #edf0f5;
+    border-radius: 12px;
+    box-shadow: 0 28px 80px rgba(16, 24, 40, .18);
+    max-width: 430px;
+    padding: 20px;
+    width: 100%;
+}
+
+.invoice-share-header {
+    align-items: flex-start;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.invoice-share-header h2 {
+    font-size: 18px;
+    margin: 0 0 8px;
+}
+
+.invoice-share-header p {
+    color: #667085;
+    font-size: 13px;
+    margin: 0;
+}
+
+.invoice-share-close {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    font: inherit;
+    font-size: 20px;
+    font-weight: 800;
+    height: 34px;
+    justify-content: center;
+    line-height: 1;
+    width: 34px;
+}
+
+.invoice-share-close:hover {
+    background: #f2f4f7;
+}
+
+.invoice-share-options {
+    border-bottom: 1px solid #edf0f5;
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    padding-bottom: 20px;
+}
+
+.invoice-share-option {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: #344054;
+    cursor: pointer;
+    display: grid;
+    font: inherit;
+    gap: 8px;
+    justify-items: center;
+    min-width: 0;
+    padding: 0;
+}
+
+.invoice-share-option span {
+    align-items: center;
+    border-radius: 999px;
+    color: #fff;
+    display: inline-flex;
+    font-size: 16px;
+    font-weight: 900;
+    height: 42px;
+    justify-content: center;
+    width: 42px;
+}
+
+.invoice-share-option strong {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.invoice-share-whatsapp span {
+    background: #25d366;
+}
+
+.invoice-share-gmail span {
+    background: #ea4335;
+}
+
+.invoice-share-telegram span {
+    background: #229ed9;
+}
+
+.invoice-share-facebook span {
+    background: #1877f2;
+}
+
+.invoice-share-other span {
+    background: #475467;
+}
+
+.invoice-share-copy-panel {
+    display: grid;
+    gap: 8px;
+    padding-top: 18px;
+}
+
+.invoice-share-copy-panel label {
+    color: #344054;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.invoice-share-copy-row {
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid #d9dee7;
+    border-radius: 8px;
+    display: flex;
+    gap: 8px;
+    padding: 6px;
+}
+
+.invoice-share-copy-row input {
+    background: transparent;
+    border: 0;
+    color: #667085;
+    font-size: 13px;
+    padding: 6px;
+}
+
+.invoice-share-copy-row input:focus {
+    outline: 0;
+}
+
+.invoice-share-copy-button {
+    background: #0f5f9f;
+    border: 0;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 8px 10px;
+}
+
+.invoice-share-toast {
+    color: #067647;
+    font-size: 13px;
+    font-weight: 800;
+    min-height: 18px;
+    margin: 12px 0 0;
+    opacity: 0;
+    transition: opacity .2s ease;
+}
+
+.invoice-share-toast.is-visible {
+    opacity: 1;
+}
+
+@media (max-width: 520px) {
+    .invoice-share-card {
+        max-width: none;
+        padding: 18px;
+    }
+
+    .invoice-share-options {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.invoice-share-modal {
+    background: rgba(7, 29, 53, .46);
+}
+
+.invoice-share-card {
+    background: var(--color-card);
+    border-color: var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+.invoice-share-header h2 {
+    color: var(--color-text);
+}
+
+.invoice-share-header p,
+.invoice-share-copy-row input {
+    color: var(--color-muted);
+}
+
+.invoice-share-close:hover {
+    background: #eff6ff;
+}
+
+.invoice-share-options {
+    border-bottom-color: var(--color-border);
+}
+
+.invoice-share-whatsapp span {
+    background: var(--color-success);
+}
+
+.invoice-share-gmail span {
+    background: var(--color-danger);
+}
+
+.invoice-share-telegram span {
+    background: var(--color-primary);
+}
+
+.invoice-share-facebook span {
+    background: var(--color-primary-hover);
+}
+
+.invoice-share-other span {
+    background: var(--color-purple);
+}
+
+.invoice-share-copy-row {
+    background: #f8fbff;
+    border-color: var(--color-border);
+}
+
+.invoice-share-copy-button {
+    background: var(--color-primary);
+}
+
+.invoice-share-toast {
+    color: #15803d;
+}
+.invoice-native-share.is-loading {
+    opacity: 0.65;
+    pointer-events: none;
+}

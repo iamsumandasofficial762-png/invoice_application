@@ -1,13 +1,13 @@
 :root {
-    --bg: #f4f6f8;
-    --panel: #ffffff;
-    --text: #17202a;
-    --muted: #667085;
-    --line: #d9dee7;
-    --primary: #0f5f9f;
-    --primary-dark: #0a4778;
-    --danger: #b42318;
-    --success: #067647;
+    --bg: var(--color-bg);
+    --panel: var(--color-card);
+    --text: var(--color-text);
+    --muted: var(--color-muted);
+    --line: var(--color-border);
+    --primary: var(--color-primary);
+    --primary-dark: var(--color-primary-hover);
+    --danger: var(--color-danger);
+    --success: var(--color-success);
 }
 
 * {
@@ -419,8 +419,239 @@ label span {
     margin-top: 12px;
 }
 
+.delete-confirm-modal {
+    align-items: center;
+    backdrop-filter: blur(5px);
+    background: rgba(7, 29, 53, .52);
+    display: none;
+    inset: 0;
+    justify-content: center;
+    padding: 20px;
+    position: fixed;
+    z-index: 90;
+}
+
+.delete-confirm-modal.is-open {
+    display: flex;
+}
+
+.delete-confirm-card {
+    background: var(--color-card, #fff);
+    border: 1px solid var(--color-border, #dbe5f1);
+    border-radius: var(--radius-card, 14px);
+    box-shadow: 0 24px 70px rgba(15, 23, 42, .28);
+    max-width: 440px;
+    padding: 24px;
+    width: 100%;
+}
+
+.delete-confirm-card h2 {
+    color: var(--color-text, #0f172a);
+    font-size: 24px;
+    margin: 0 0 8px;
+}
+
+.delete-confirm-card p {
+    color: var(--color-muted, #64748b);
+    margin: 0;
+}
+
+.delete-confirm-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 22px;
+}
+
+.delete-confirm-actions .btn {
+    align-items: center;
+    min-height: 40px;
+    min-width: 90px;
+}
+
+.delete-confirm-cancel {
+    background: #fff;
+    border-color: var(--color-border, #dbe5f1);
+    color: var(--color-text, #0f172a);
+}
+
+.delete-confirm-submit {
+    background: var(--color-danger, #ef4444);
+    border-color: var(--color-danger, #ef4444);
+    color: #fff;
+}
+
+.delete-confirm-submit:hover {
+    background: #dc2626;
+}
+
 nav[role="navigation"] {
     margin-top: 18px;
+}
+
+body {
+    background:
+        radial-gradient(circle at 92% 8%, rgba(37, 99, 235, .06), transparent 28%),
+        var(--color-bg);
+    color: var(--color-text);
+}
+
+.topbar {
+    background: var(--color-card);
+    border-bottom-color: var(--color-border);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, .06);
+}
+
+.brand {
+    color: var(--color-text);
+}
+
+.sidebar {
+    background: linear-gradient(180deg, var(--color-sidebar-start), var(--color-sidebar-end));
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, .08);
+    color: #eaf2ff;
+}
+
+.sidebar-nav a {
+    color: #dbeafe;
+    font-weight: 700;
+}
+
+.sidebar-nav a.active,
+.sidebar-nav a:hover {
+    background: var(--color-sidebar-active);
+    box-shadow: var(--shadow-soft);
+    color: #fff;
+}
+
+.main-content {
+    background: transparent;
+}
+
+.page-header h1 {
+    color: var(--color-text);
+}
+
+.eyebrow {
+    color: #526783;
+}
+
+.btn,
+.form-card,
+.data-table,
+.dashboard-card,
+.detail-grid div,
+.modal-panel,
+.empty-state,
+.calculation-summary {
+    border-color: var(--color-border);
+}
+
+.form-card,
+.dashboard-card,
+.detail-grid div,
+.modal-panel {
+    background: var(--color-card);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+.btn {
+    border-radius: 8px;
+    font-weight: 800;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+}
+
+.btn-primary:hover {
+    background: var(--color-primary-hover);
+}
+
+.btn-secondary {
+    background: #eaf2ff;
+    color: var(--color-primary-hover);
+}
+
+.btn-light {
+    background: var(--color-card);
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+
+.btn-danger {
+    background: var(--color-danger);
+}
+
+input,
+select,
+textarea {
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+    outline: 0;
+}
+
+label span {
+    color: #334155;
+}
+
+.alert {
+    border-radius: 10px;
+}
+
+.alert-success {
+    background: var(--color-success-soft);
+    color: #15803d;
+}
+
+.alert-error {
+    background: var(--color-danger-soft);
+    color: #b91c1c;
+}
+
+.data-table th {
+    background: #f0f6ff;
+}
+
+.status-paid {
+    background: var(--color-success-soft);
+    color: #15803d;
+}
+
+.status-unpaid {
+    background: var(--color-warning-soft);
+    color: #c2410c;
+}
+
+.dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dashboard-card {
+    min-height: 132px;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.dashboard-card:hover {
+    box-shadow: 0 22px 55px rgba(37, 99, 235, .14);
+    transform: translateY(-2px);
+}
+
+.dashboard-card strong {
+    color: var(--color-text);
+    font-size: 22px;
+}
+
+.dashboard-card:nth-child(2) {
+    background: linear-gradient(135deg, #fff, var(--color-purple-soft));
 }
 
 @media (max-width: 860px) {
