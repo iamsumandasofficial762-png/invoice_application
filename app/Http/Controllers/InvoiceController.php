@@ -49,10 +49,12 @@ class InvoiceController extends Controller
         return view('invoices.index', compact('invoices', 'search', 'perPage'));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
+        $selectedCustomerId = $request->old('customer_id');
+
         return view('invoices.create', [
-            'customers' => Customer::orderBy('name')->get(),
+            'customers' => $selectedCustomerId ? Customer::whereKey($selectedCustomerId)->get() : collect(),
             'invoiceNumber' => $this->invoiceNumberService->next(),
             'signatures' => $this->signatures,
         ]);
@@ -97,13 +99,14 @@ class InvoiceController extends Controller
         return view('invoices.show', compact('invoice'));
     }
 
-    public function edit(Invoice $invoice): View
+    public function edit(Request $request, Invoice $invoice): View
     {
         $invoice->load(['customer', 'items']);
+        $selectedCustomerId = $request->old('customer_id', $invoice->customer_id);
 
         return view('invoices.edit', [
             'invoice' => $invoice,
-            'customers' => Customer::orderBy('name')->get(),
+            'customers' => Customer::whereKey($selectedCustomerId)->get(),
             'signatures' => $this->signatures,
         ]);
     }
@@ -234,7 +237,7 @@ class InvoiceController extends Controller
                 'invoice_date' => $invoice->invoice_date->format('d-m-Y'),
                 'customer_name' => $invoice->customer->name,
                 'customer_gst' => $invoice->customer->gst,
-                'net_payable_amount' => number_format((float) $invoice->net_payable_amount, 2),
+                'net_payable_amount' => number_format((float) $invoice->net_payable_amount, 0),
                 'payment_status' => $invoice->payment_status ?? 'unpaid',
                 'show_url' => route('invoices.show', $invoice),
                 'edit_url' => route('invoices.edit', $invoice),

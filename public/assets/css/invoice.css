@@ -351,7 +351,7 @@
 
 .invoice-table th {
     background: #f2f2f2;
-    font-size: 12px;
+    font-size: 14px;
     text-align: center;
 }
 
@@ -390,6 +390,13 @@
 .invoice-amount-word-row,
 .invoice-payment-row {
     display: grid;
+}
+
+.invoice-amount-word-row {
+    grid-template-columns: 40% 60%;
+}
+
+.invoice-payment-row {
     grid-template-columns: 50% 50%;
 }
 
@@ -400,9 +407,13 @@
     padding: 8px;
 }
 
+.invoice-amount-word-value {
+    font-size: 13px;
+}
+
 .invoice-bank-signature-grid {
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 40% 60%;
     min-height: 190px;
 }
 
@@ -428,16 +439,12 @@
 .for-row {
     border-bottom: 2px solid #111;
     display: grid;
+    font-size: 13px;
     grid-template-columns: 18% 82%;
 }
 
 .for-row strong {
-    border-right: 2px solid #111;
     padding: 6px 8px;
-}
-
-.for-row strong:last-child {
-    border-right: 0;
 }
 
 .signature-block img {

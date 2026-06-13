@@ -23,7 +23,7 @@
             </tr>
             <tr>
                 <td><strong>Net Payble Amt.</strong></td>
-                <td><strong data-summary-net>0.00</strong></td>
+                <td><strong data-summary-net>0</strong></td>
             </tr>
             <tr class="amount-word-row">
                 <td><strong>Amount In Word:-</strong></td>

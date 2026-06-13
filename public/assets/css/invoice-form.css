@@ -116,6 +116,19 @@
     width: 100%;
 }
 
+.customer-select2.is-native-autocomplete {
+    display: none;
+}
+
+.customer-autocomplete {
+    position: relative;
+}
+
+.customer-search-input {
+    box-sizing: border-box;
+    width: 100%;
+}
+
 .invoice-party-box .select2-container {
     display: block;
     width: 100% !important;

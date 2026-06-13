@@ -32,7 +32,7 @@
             type="button"
             data-invoice-number="{{ $item->invoice_number }}"
             data-customer-name="{{ $item->customer->name }}"
-            data-net-payable="{{ number_format((float) $item->net_payable_amount, 2) }}"
+            data-net-payable="{{ number_format((float) $item->net_payable_amount, 0) }}"
             data-pdf-url="{{ route($routePrefix.'.pdf', $item) }}"
             title="Share invoice"
             aria-label="Share invoice"

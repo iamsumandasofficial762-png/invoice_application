@@ -28,6 +28,7 @@ class InvoiceCalculationService
         $sgst = round($subtotal * 0.09, 2);
         $totalTax = round($cgst + $sgst, 2);
         $grossAmount = round($subtotal + $totalTax, 2);
+        $netPayableAmount = round($grossAmount, 0, PHP_ROUND_HALF_UP);
 
         return [
             'items' => $normalizedItems,
@@ -36,7 +37,7 @@ class InvoiceCalculationService
             'sgst' => $sgst,
             'total_tax' => $totalTax,
             'gross_amount' => $grossAmount,
-            'net_payable_amount' => $grossAmount,
+            'net_payable_amount' => $netPayableAmount,
         ];
     }
 }

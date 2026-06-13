@@ -64,7 +64,7 @@
                             <td data-label="Date">{{ $invoice->invoice_date->format('d-m-Y') }}</td>
                             <td data-label="Customer">{{ $invoice->customer->name }}</td>
                             <td data-label="GST"><span class="gst-badge">{{ $invoice->customer->gst }}</span></td>
-                            <td data-label="Net Payable">Rs. {{ number_format((float) $invoice->net_payable_amount, 2) }}</td>
+                            <td data-label="Net Payable">Rs. {{ number_format((float) $invoice->net_payable_amount, 0) }}</td>
                             <td data-label="Status">
                                 <span class="status-badge status-{{ $invoice->payment_status ?? 'unpaid' }}">
                                     {{ ucfirst($invoice->payment_status ?? 'unpaid') }}
@@ -89,7 +89,7 @@
                                         type="button"
                                         data-invoice-number="{{ $invoice->invoice_number }}"
                                         data-customer-name="{{ $invoice->customer->name }}"
-                                        data-net-payable="{{ number_format((float) $invoice->net_payable_amount, 2) }}"
+                                        data-net-payable="{{ number_format((float) $invoice->net_payable_amount, 0) }}"
                                         data-pdf-url="{{ route('invoices.pdf', $invoice) }}"
                                         title="Share invoice"
                                         aria-label="Share invoice"
@@ -115,7 +115,7 @@
             @foreach ($invoices as $invoice)
                 @php
                     $status = $invoice->payment_status ?? 'unpaid';
-                    $netPayable = number_format((float) $invoice->net_payable_amount, 2);
+                    $netPayable = number_format((float) $invoice->net_payable_amount, 0);
                 @endphp
                 <article class="invoice-mobile-card">
                     <header class="invoice-mobile-card-header">

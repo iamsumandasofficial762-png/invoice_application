@@ -13,6 +13,14 @@
         return Number(value || 0).toFixed(2);
     }
 
+    function wholeMoney(value) {
+        return String(Number(value || 0));
+    }
+
+    function netPayable(value) {
+        return Math.round(Number(value || 0));
+    }
+
     function wordsUnderHundred(number) {
         const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
         const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
@@ -118,6 +126,7 @@
         const sgst = subtotal * 0.09;
         const totalTax = cgst + sgst;
         const gross = subtotal + totalTax;
+        const roundedNetPayable = netPayable(gross);
 
         const values = {
             '[data-summary-subtotal]': subtotal,
@@ -125,19 +134,21 @@
             '[data-summary-sgst]': sgst,
             '[data-summary-total-tax]': totalTax,
             '[data-summary-gross]': gross,
-            '[data-summary-net]': gross,
+            '[data-summary-net]': roundedNetPayable,
         };
 
         Object.keys(values).forEach(function (selector) {
             const element = document.querySelector(selector);
 
             if (element) {
-                element.textContent = money(values[selector]);
+                element.textContent = selector === '[data-summary-net]'
+                    ? wholeMoney(values[selector])
+                    : money(values[selector]);
             }
         });
 
         if (amountWordsPreview) {
-            amountWordsPreview.textContent = numberToIndianWords(gross);
+            amountWordsPreview.textContent = numberToIndianWords(roundedNetPayable);
         }
     }
 

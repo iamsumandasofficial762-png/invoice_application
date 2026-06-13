@@ -23,18 +23,14 @@
             </tr>
             <tr>
                 <td><strong>Net Payble Amt.</strong></td>
-                <td><strong>{{ number_format((float) $invoice->net_payable_amount, 2) }}</strong></td>
+                <td><strong>{{ number_format((float) $invoice->net_payable_amount, 0) }}</strong></td>
             </tr>
         </tbody>
     </table>
 
     <div class="invoice-amount-word-row">
         <strong>Amount In Word:-</strong>
-        <strong>{{ $invoice->amount_in_words }}</strong>
+        <strong class="invoice-amount-word-value">{{ $invoice->amount_in_words }}</strong>
     </div>
 
-    <div class="invoice-payment-row">
-        <strong>Payment Method:</strong>
-        <span>E. &amp; O.E.</span>
-    </div>
 </section>

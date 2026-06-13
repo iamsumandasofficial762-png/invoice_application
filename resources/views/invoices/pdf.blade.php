@@ -90,24 +90,21 @@
             </tr>
             <tr>
                 <td><strong>Net Payble Amt.</strong></td>
-                <td><strong>{{ number_format((float) $invoice->net_payable_amount, 2) }}</strong></td>
+                <td><strong>{{ number_format((float) $invoice->net_payable_amount, 0) }}</strong></td>
             </tr>
         </table>
 
         <table class="info-table">
-            <tr>
+            <tr class="amount-in-word-row">
                 <td><strong>Amount In Word:-</strong></td>
                 <td><strong>{{ $invoice->amount_in_words }}</strong></td>
-            </tr>
-            <tr>
-                <td><strong>Payment Method:</strong></td>
-                <td>E. &amp; O.E.</td>
             </tr>
         </table>
 
         <table class="payment-signature-table">
             <tr>
-                <td class="bank-cell">
+                <td class="bank-cell" style="width: 40%;">
+                    <h3>Payment Method:</h3>
                     <p>Cash / Cheque / NEFT/RTGS/IMPS</p>
                     <h3>Bank Details:-</h3>
                     <p>Bank: AXIS BANK</p>
@@ -116,7 +113,7 @@
                     <p>IFSC Code: UTIB0001656</p>
                     <p>Branch: New Barrackpur Branch</p>
                 </td>
-                <td class="signature-cell">
+                <td class="signature-cell" style="width: 60%;">
                     <div class="for-row">
                         <span>For:</span>
                         <strong>EBLUESOFT INFOTECT SOLUTIONS PRIVATE LIMITED</strong>

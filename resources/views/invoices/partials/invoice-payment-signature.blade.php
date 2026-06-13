@@ -1,5 +1,6 @@
 <section class="invoice-payment-signature invoice-bank-signature-grid">
     <div class="bank-details-block">
+        <h3>Payment Method:</h3>
         <p>Cash / Cheque / NEFT/RTGS/IMPS</p>
         <h3>Bank Details:-</h3>
         <p>Bank: AXIS BANK</p>
