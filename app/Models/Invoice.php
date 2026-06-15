@@ -23,6 +23,7 @@ class Invoice extends Model
         'net_payable_amount',
         'amount_in_words',
         'signature_image',
+        'pdf_path',
         'payment_status',
     ];
 

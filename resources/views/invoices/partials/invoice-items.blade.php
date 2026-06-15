@@ -18,7 +18,7 @@
                 <td>{{ number_format((float) $item->amount, 2) }}</td>
             </tr>
         @endforeach
-        @if ($pdfMode ?? false)
+        @if (($pdfMode ?? false) || ($printMode ?? false))
             @for ($i = $invoice->items->count(); $i < 4; $i++)
                 <tr class="invoice-filler-row">
                     <td>&nbsp;</td>

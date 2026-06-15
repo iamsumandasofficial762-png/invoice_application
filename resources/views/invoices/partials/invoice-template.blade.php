@@ -1,5 +1,6 @@
 @php
     $isPdf = $pdfMode ?? false;
+    $isPrint = $printMode ?? false;
     $assetSource = fn (string $path) => $isPdf ? public_path($path) : asset($path);
     $invoiceHeaderPath = file_exists(public_path('assets/images/invoice-header.png'))
         ? 'assets/images/invoice-header.png'
@@ -27,7 +28,11 @@
                     <div><strong>Invoice No.:</strong> {{ $invoice->invoice_number }}</div>
                     <div><strong>Invoice Date:</strong> {{ $invoice->invoice_date->format('d-m-Y') }}</div>
                 </section>
-                @include('invoices.partials.invoice-items', ['invoice' => $invoice, 'pdfMode' => $isPdf])
+                @include('invoices.partials.invoice-items', [
+                    'invoice' => $invoice,
+                    'pdfMode' => $isPdf,
+                    'printMode' => $isPrint,
+                ])
                 @include('invoices.partials.invoice-summary', ['invoice' => $invoice])
                 @include('invoices.partials.invoice-payment-signature', [
                     'invoice' => $invoice,

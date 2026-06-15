@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Services\InvoiceCalculationService;
+use App\Services\InvoicePdfService;
 use App\Services\InvoiceNumberService;
 use App\Services\NumberToWordsService;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -24,6 +25,7 @@ class InvoiceController extends Controller
 
     public function __construct(
         private readonly InvoiceCalculationService $calculationService,
+        private readonly InvoicePdfService $invoicePdfService,
         private readonly InvoiceNumberService $invoiceNumberService,
         private readonly NumberToWordsService $numberToWordsService,
     ) {}
@@ -85,6 +87,8 @@ class InvoiceController extends Controller
             $invoice->items()->createMany($calculation['items']);
         });
 
+        $this->invoicePdfService->generate($invoice);
+
         if ($request->input('action') === 'save_print') {
             return redirect()->route('invoices.print', $invoice)->with('success', 'Invoice created successfully.');
         }
@@ -115,6 +119,7 @@ class InvoiceController extends Controller
     {
         $validated = $this->validatedData($request);
         $this->ensureUniqueInvoiceNumber($validated['invoice_number'], $invoice->id);
+        $oldPdfPath = $invoice->pdf_path;
 
         DB::transaction(function () use ($validated, $invoice) {
             $calculation = $this->calculationService->calculate($validated['items']);
@@ -136,11 +141,16 @@ class InvoiceController extends Controller
             $invoice->items()->createMany($calculation['items']);
         });
 
+        $this->invoicePdfService->deleteOldPdf($oldPdfPath);
+        $this->invoicePdfService->generate($invoice->fresh(['customer', 'items']));
+
         return redirect()->route('invoices.show', $invoice)->with('success', 'Invoice updated successfully.');
     }
 
     public function destroy(Invoice $invoice): RedirectResponse
     {
+        $this->invoicePdfService->deleteOldPdf($invoice->pdf_path);
+
         $invoice->delete();
 
         return redirect()->route('invoices.index')->with('success', 'Invoice deleted successfully.');
@@ -148,18 +158,13 @@ class InvoiceController extends Controller
 
     public function downloadPdf(Invoice $invoice)
     {
-        $invoice->load(['customer', 'items']);
-        $fileName = preg_replace('/[^A-Za-z0-9\-]/', '-', $invoice->invoice_number).'.pdf';
+        $disk = Storage::disk('public');
 
-        $pdf = Pdf::loadView('invoices.pdf', compact('invoice'))
-            ->setPaper('a4', 'portrait')
-            ->setOptions([
-                'isHtml5ParserEnabled' => true,
-                'isRemoteEnabled' => true,
-                'defaultFont' => 'DejaVu Sans',
-            ]);
+        if (! $invoice->pdf_path || ! $disk->exists($invoice->pdf_path)) {
+            $invoice = $this->invoicePdfService->generate($invoice);
+        }
 
-        return $pdf->download($fileName);
+        return $disk->download($invoice->pdf_path, basename($invoice->pdf_path));
     }
 
     public function print(Invoice $invoice): View
