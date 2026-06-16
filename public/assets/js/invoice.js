@@ -21,6 +21,20 @@
         return Math.round(Number(value || 0));
     }
 
+    function customerState() {
+        const customerSelect = document.getElementById('customerSelect2');
+        const selectedOption = customerSelect?.options[customerSelect.selectedIndex];
+        const preview = document.getElementById('buyerDetailsPreview');
+
+        return (selectedOption?.dataset.state || preview?.dataset.state || '').trim();
+    }
+
+    function isIntraStateInvoice() {
+        const state = customerState();
+
+        return !state || state === 'West Bengal';
+    }
+
     function wordsUnderHundred(number) {
         const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
         const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
@@ -122,9 +136,11 @@
             row.querySelector('[data-amount]').value = money(amount);
         });
 
-        const cgst = subtotal * 0.09;
-        const sgst = subtotal * 0.09;
-        const totalTax = cgst + sgst;
+        const isIntraState = isIntraStateInvoice();
+        const cgst = isIntraState ? subtotal * 0.09 : 0;
+        const sgst = isIntraState ? subtotal * 0.09 : 0;
+        const igst = isIntraState ? 0 : subtotal * 0.18;
+        const totalTax = cgst + sgst + igst;
         const gross = subtotal + totalTax;
         const roundedNetPayable = netPayable(gross);
 
@@ -132,6 +148,7 @@
             '[data-summary-subtotal]': subtotal,
             '[data-summary-cgst]': cgst,
             '[data-summary-sgst]': sgst,
+            '[data-summary-igst]': igst,
             '[data-summary-total-tax]': totalTax,
             '[data-summary-gross]': gross,
             '[data-summary-net]': roundedNetPayable,
@@ -150,6 +167,14 @@
         if (amountWordsPreview) {
             amountWordsPreview.textContent = numberToIndianWords(roundedNetPayable);
         }
+
+        document.querySelectorAll('[data-tax-row="cgst"], [data-tax-row="sgst"], [data-tax-row="total-tax"]').forEach(function (row) {
+            row.hidden = !isIntraState;
+        });
+
+        document.querySelectorAll('[data-tax-row="igst"]').forEach(function (row) {
+            row.hidden = isIntraState;
+        });
     }
 
     function addItemRow() {
@@ -183,6 +208,7 @@
 
     signatureSelect?.addEventListener('change', refreshSignaturePreview);
     addItemButton?.addEventListener('click', addItemRow);
+    document.addEventListener('invoice:customer-selected', recalculate);
 
     itemsBody?.addEventListener('input', function (event) {
         if (event.target.matches('[data-unit-price]')) {

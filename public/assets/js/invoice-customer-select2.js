@@ -21,6 +21,7 @@
 
     function renderPreview(customer) {
         preview.innerHTML = '';
+        preview.dataset.state = customer?.state || '';
 
         if (!customer || !customer.id) {
             preview.textContent = 'Select a customer to show details.';
@@ -117,6 +118,11 @@
             searchInput.value = '';
             select.value = '';
             renderPreview(null);
+            document.dispatchEvent(new CustomEvent('invoice:customer-selected', {
+                detail: {
+                    customer: null,
+                },
+            }));
             closeResults();
             return;
         }
@@ -125,6 +131,11 @@
         hiddenInput.value = customer.id;
         searchInput.value = selectedLabel(customer);
         renderPreview(customer);
+        document.dispatchEvent(new CustomEvent('invoice:customer-selected', {
+            detail: {
+                customer: customer,
+            },
+        }));
         closeResults();
     }
 
@@ -235,6 +246,11 @@
             hiddenInput.value = '';
             select.value = '';
             renderPreview(null);
+            document.dispatchEvent(new CustomEvent('invoice:customer-selected', {
+                detail: {
+                    customer: null,
+                },
+            }));
             queueSearch();
         });
 
@@ -246,6 +262,11 @@
 
         window.selectInvoiceCustomer = selectCustomer;
         renderPreview(initialCustomer);
+        document.dispatchEvent(new CustomEvent('invoice:customer-selected', {
+            detail: {
+                customer: initialCustomer,
+            },
+        }));
     }
 
     initNativeAutocomplete();

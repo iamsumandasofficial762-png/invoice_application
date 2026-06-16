@@ -4,7 +4,11 @@ namespace App\Services;
 
 class InvoiceCalculationService
 {
-    public function calculate(array $items): array
+    private const COMPANY_STATE = 'West Bengal';
+    private const TAX_TYPE_INTRA_STATE = 'intra_state';
+    private const TAX_TYPE_INTER_STATE = 'inter_state';
+
+    public function calculate(array $items, ?string $customerState = null): array
     {
         $normalizedItems = [];
         $subtotal = 0;
@@ -24,20 +28,39 @@ class InvoiceCalculationService
         }
 
         $subtotal = round($subtotal, 2);
-        $cgst = round($subtotal * 0.09, 2);
-        $sgst = round($subtotal * 0.09, 2);
-        $totalTax = round($cgst + $sgst, 2);
+        $taxType = $this->taxTypeForState($customerState);
+        $cgst = 0.00;
+        $sgst = 0.00;
+        $igst = 0.00;
+
+        if ($taxType === self::TAX_TYPE_INTRA_STATE) {
+            $cgst = round($subtotal * 0.09, 2);
+            $sgst = round($subtotal * 0.09, 2);
+        } else {
+            $igst = round($subtotal * 0.18, 2);
+        }
+
+        $totalTax = round($cgst + $sgst + $igst, 2);
         $grossAmount = round($subtotal + $totalTax, 2);
         $netPayableAmount = round($grossAmount, 0, PHP_ROUND_HALF_UP);
 
         return [
             'items' => $normalizedItems,
             'subtotal' => $subtotal,
+            'tax_type' => $taxType,
             'cgst' => $cgst,
             'sgst' => $sgst,
+            'igst' => $igst,
             'total_tax' => $totalTax,
             'gross_amount' => $grossAmount,
             'net_payable_amount' => $netPayableAmount,
         ];
+    }
+
+    public function taxTypeForState(?string $customerState): string
+    {
+        return trim((string) $customerState) === self::COMPANY_STATE
+            ? self::TAX_TYPE_INTRA_STATE
+            : self::TAX_TYPE_INTER_STATE;
     }
 }

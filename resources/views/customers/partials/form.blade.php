@@ -1,4 +1,45 @@
 <div class="form-grid">
+    @php
+        $indianStates = [
+            'Andhra Pradesh',
+            'Arunachal Pradesh',
+            'Assam',
+            'Bihar',
+            'Chhattisgarh',
+            'Goa',
+            'Gujarat',
+            'Haryana',
+            'Himachal Pradesh',
+            'Jharkhand',
+            'Karnataka',
+            'Kerala',
+            'Madhya Pradesh',
+            'Maharashtra',
+            'Manipur',
+            'Meghalaya',
+            'Mizoram',
+            'Nagaland',
+            'Odisha',
+            'Punjab',
+            'Rajasthan',
+            'Sikkim',
+            'Tamil Nadu',
+            'Telangana',
+            'Tripura',
+            'Uttar Pradesh',
+            'Uttarakhand',
+            'West Bengal',
+            'Andaman and Nicobar Islands',
+            'Chandigarh',
+            'Dadra and Nagar Haveli and Daman and Diu',
+            'Delhi',
+            'Jammu and Kashmir',
+            'Ladakh',
+            'Lakshadweep',
+            'Puducherry',
+        ];
+    @endphp
+
     <label>
         <span class="required-label">Name</span>
         <input type="text" name="name" value="{{ old('name', $customer?->name) }}" required>
@@ -6,7 +47,12 @@
     </label>
     <label>
         <span class="required-label">State</span>
-        <input type="text" name="state" value="{{ old('state', $customer?->state) }}" required>
+        <select name="state" required>
+            <option value="">Select State</option>
+            @foreach ($indianStates as $state)
+                <option value="{{ $state }}" @selected(old('state', $customer?->state) === $state)>{{ $state }}</option>
+            @endforeach
+        </select>
         <x-form-error name="state" />
     </label>
     <label>

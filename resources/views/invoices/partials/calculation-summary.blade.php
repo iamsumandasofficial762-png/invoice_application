@@ -5,15 +5,19 @@
                 <td>Total:-</td>
                 <td><strong data-summary-subtotal>0.00</strong></td>
             </tr>
-            <tr>
-                <td>Add CGST @9 %</td>
+            <tr data-tax-row="cgst">
+                <td>CGST @ 9 %</td>
                 <td><strong data-summary-cgst>0.00</strong></td>
             </tr>
-            <tr>
-                <td>Add SGST @ 9 %</td>
+            <tr data-tax-row="sgst">
+                <td>SGST @ 9 %</td>
                 <td><strong data-summary-sgst>0.00</strong></td>
             </tr>
-            <tr>
+            <tr data-tax-row="igst" hidden>
+                <td>IGST @ 18 %</td>
+                <td><strong data-summary-igst>0.00</strong></td>
+            </tr>
+            <tr data-tax-row="total-tax">
                 <td>Total Tax:- @ 18 %</td>
                 <td><strong data-summary-total-tax>0.00</strong></td>
             </tr>

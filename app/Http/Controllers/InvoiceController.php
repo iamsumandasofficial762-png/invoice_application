@@ -69,14 +69,17 @@ class InvoiceController extends Controller
         $invoice = null;
 
         DB::transaction(function () use ($validated, &$invoice) {
-            $calculation = $this->calculationService->calculate($validated['items']);
+            $customer = Customer::findOrFail($validated['customer_id']);
+            $calculation = $this->calculationService->calculate($validated['items'], $customer->state);
             $invoice = Invoice::create([
                 'customer_id' => $validated['customer_id'],
                 'invoice_number' => $validated['invoice_number'],
                 'invoice_date' => $validated['invoice_date'],
                 'subtotal' => $calculation['subtotal'],
+                'tax_type' => $calculation['tax_type'],
                 'cgst' => $calculation['cgst'],
                 'sgst' => $calculation['sgst'],
+                'igst' => $calculation['igst'],
                 'total_tax' => $calculation['total_tax'],
                 'gross_amount' => $calculation['gross_amount'],
                 'net_payable_amount' => $calculation['net_payable_amount'],
@@ -122,14 +125,17 @@ class InvoiceController extends Controller
         $oldPdfPath = $invoice->pdf_path;
 
         DB::transaction(function () use ($validated, $invoice) {
-            $calculation = $this->calculationService->calculate($validated['items']);
+            $customer = Customer::findOrFail($validated['customer_id']);
+            $calculation = $this->calculationService->calculate($validated['items'], $customer->state);
             $invoice->update([
                 'customer_id' => $validated['customer_id'],
                 'invoice_number' => $validated['invoice_number'],
                 'invoice_date' => $validated['invoice_date'],
                 'subtotal' => $calculation['subtotal'],
+                'tax_type' => $calculation['tax_type'],
                 'cgst' => $calculation['cgst'],
                 'sgst' => $calculation['sgst'],
+                'igst' => $calculation['igst'],
                 'total_tax' => $calculation['total_tax'],
                 'gross_amount' => $calculation['gross_amount'],
                 'net_payable_amount' => $calculation['net_payable_amount'],
